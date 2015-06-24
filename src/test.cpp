@@ -35,7 +35,7 @@ void check2() {
 	c.Encolar(20);
 	c.Encolar(30);
 	c.Encolar(50);
-  c.Encolar(0);
+    c.Encolar(0);
 	c.Encolar(20);
 	c.Encolar(6);
 	c.Encolar(30);

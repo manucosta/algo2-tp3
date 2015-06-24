@@ -105,9 +105,6 @@ private:
     }
     return true;
   }
-
-
-
 };
 
 template<class T>
