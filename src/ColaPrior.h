@@ -117,8 +117,7 @@ template<class T>
 ColaPrior<T>::~ColaPrior(){
 	while(tam > 0){
 		Desencolar();
-	}
-  //std::cout << "quiere borrar" << std::endl;
+	} 
 }
 
 template<class T>
@@ -133,8 +132,7 @@ void ColaPrior<T>::Encolar(const T elem) {
   
 
 	Nodo* nuevo = new Nodo(elem);
-	if(tam == 0){
-		//cout<<"Encolo: "<<nuevo->dato<<endl;
+	if(tam == 0){	
 		cabeza = nuevo;
 	}else{
 		//Armo el recorrido hasta la primer posición libre
@@ -159,11 +157,6 @@ void ColaPrior<T>::Encolar(const T elem) {
 			it.Avanzar();
 		}
 
-
-  std::cout << std::endl;
-  print(cabeza);
- std::cout << "cumple invariante despues de encolar: " << chequeo_inv(cabeza) << std::endl;
-		
  nuevo->padre = padreNuevo;
 		if (ultimo == 0)
 		{
@@ -174,25 +167,12 @@ void ColaPrior<T>::Encolar(const T elem) {
 
 		//Reposiciono el nuevo elemento donde corresponde
 		Nodo* actual = nuevo;
-		/**DEBUG**/
-		//std::cout << "Encolo: "<< actual->dato<< std::endl;
-		/*while(actual->padre != NULL && actual->padre->dato > actual->dato){
-			T x = actual->dato;
-			actual->dato = actual->padre->dato;
-			actual->padre->dato = x;
-			actual = actual->padre;
-		}*/
-
     while(actual->padre != NULL && actual->padre->dato > actual->dato){
       Intercambiar(actual->padre, actual); 
     }
 
 	}
 	tam++;
-
-  print(cabeza);
- std::cout << "cumple invariante despues de encolar: " << chequeo_inv(cabeza) << std::endl;
-  //std::cout << tam << ": "; print(cabeza); 
 }
 
 template<class T>
@@ -200,9 +180,9 @@ T ColaPrior<T>::Desencolar(){
 	assert(!Vacia());
 	T res = Proximo();
 
- //std::cout << "cumple invariante al principio: " << chequeo_inv(cabeza) << std::endl;
+ 
 	if (tam == 1){
-	 	//std::cout<< cabeza->dato << std::endl;
+	 	
 	 	delete cabeza;
 	 	cabeza = NULL;
 	 }else{
@@ -226,8 +206,6 @@ T ColaPrior<T>::Desencolar(){
 			it.Avanzar();
 		}
 
-		/**DEBUG**/
-		//std::cout<< ultimo->dato << std::endl;
 		if(recorridoHastaUltimo.Ultimo() == 1){
 			Nodo* papa = ultimo->padre;
 			papa->der = NULL;
@@ -269,12 +247,11 @@ T ColaPrior<T>::Desencolar(){
         } else {
           Intercambiar(actual, actual->der);
         }
-      }
-      //std::cout << "se colgo" <<std::endl;
+      }  
     }
 	}
 	tam--;
-  //std::cout << "cumple invariante al final: " << chequeo_inv(cabeza) << std::endl;
+ 
 
 	return res;
 }
