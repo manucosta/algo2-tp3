@@ -71,8 +71,8 @@ void check2() {
 
 int main() {
 
-	//RUN_TEST(check1);
-  //RUN_TEST(check2);
+  RUN_TEST(check1);
+  RUN_TEST(check2);
 
   ColaPrior<int> c;
 
