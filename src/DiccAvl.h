@@ -73,8 +73,8 @@ DiccAvl<K,S>::DiccAvl(){
 
 template <typename K, typename S>
 DiccAvl<K,S>::~DiccAvl(){
-  while(*d != NULL){
-    Borrar((*d)->clave);
+  while(*raiz != NULL){
+    Borrar((*raiz)->clave);
   }
 }
 
