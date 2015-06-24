@@ -12,14 +12,18 @@ void check1() {
 	c.Encolar(-1);
 	c.Encolar(2);
 	c.Encolar(0);
-	cout<<"Proximo: "<< c.Proximo()<<endl;
+	c.Encolar(100);
+	c.Encolar(200);
+	c.Encolar(200);
+	c.Encolar(300);
+	//cout<<"Proximo: "<< c.Proximo()<<endl;
 	int a = c.Desencolar();
 	
-	cout<<"Proximo: "<< c.Proximo()<<endl;
+	//cout<<"Proximo: "<< c.Proximo()<<endl;
 	int b = c.Desencolar();
-	cout<<"Proximo: "<< c.Proximo()<<endl;
+	//cout<<"Proximo: "<< c.Proximo()<<endl;
 	int d = c.Desencolar();
-	cout<<"Proximo: "<< c.Proximo()<<endl;
+	//cout<<"Proximo: "<< c.Proximo()<<endl;
 	int e = c.Desencolar();
 	ASSERT_EQ(a, -1);
 	ASSERT_EQ(b, 0);
@@ -34,7 +38,7 @@ void check2() {
 	c.Encolar(20);
 	c.Encolar(30);
 	c.Encolar(50);
-	c.Encolar(0);
+  c.Encolar(0);
 	c.Encolar(20);
 	c.Encolar(6);
 	c.Encolar(30);
@@ -71,24 +75,9 @@ void check2() {
 
 int main() {
 
-  RUN_TEST(check1);
+  //RUN_TEST(check1);
   RUN_TEST(check2);
 
-  ColaPrior<int> c;
-
-  c.Encolar(0);
-  c.Encolar(3);
-  c.Encolar(4);
-  int a;
-  a = c.Desencolar();
-  std::cout << a << std::endl;
-  
-  a = c.Desencolar();
-
-  std::cout << a << std::endl;
-  a = c.Desencolar();
-  
-  std::cout << a << std::endl;
 
   return 0;
 }
