@@ -1,12 +1,13 @@
 #include <iostream>
 #include <assert.h>
 #include "ColaPrior.h"
+#include "DiccAvl.h"
 #include "aed2.h"
 #include "../mini_test.h"
 
 using namespace std;
 
-void check1() {
+void colaprior1() {
 	ColaPrior<int> c;
 	c.Encolar(1);
 	c.Encolar(-1);
@@ -28,14 +29,14 @@ void check1() {
 	ASSERT_EQ(d, 1);
 }
 
-void check2() {
+void colaprior2() {
 	ColaPrior<Nat> c;
 	c.Encolar(100);
 	c.Encolar(20);
 	c.Encolar(20);
 	c.Encolar(30);
 	c.Encolar(50);
-    c.Encolar(0);
+  c.Encolar(0);
 	c.Encolar(20);
 	c.Encolar(6);
 	c.Encolar(30);
@@ -62,10 +63,39 @@ void check2() {
 	ASSERT_EQ(a, 100);
 }
 
+void avl1(){
+  DiccAvl<int, int> dicc;
+
+
+  ASSERT_EQ(dicc.Definido(1), false);
+  ASSERT_EQ(dicc.Definido(2), false);
+  ASSERT_EQ(dicc.Definido(3), false);
+  ASSERT_EQ(dicc.Definido(4), false);
+  ASSERT_EQ(dicc.Definido(5), false);
+  dicc.Definir(1,1);
+  dicc.Definir(2,1);
+  dicc.Definir(3,1);
+  dicc.Definir(4,1);
+  dicc.Definir(5,1);
+  ASSERT_EQ(dicc.Definido(1), true);
+  ASSERT_EQ(dicc.Definido(2), true);
+  ASSERT_EQ(dicc.Definido(3), true);
+  ASSERT_EQ(dicc.Definido(4), true);
+  ASSERT_EQ(dicc.Definido(5), true);
+
+
+  dicc.Borrar(4);
+  ASSERT_EQ(dicc.Definido(4), false);
+  dicc.Definir(4,4);
+  ASSERT_EQ(dicc.Definido(4), true);
+} 
+
+
 int main() {
 
-  RUN_TEST(check1);
-  RUN_TEST(check2);
+  //RUN_TEST(colaprior1);
+  //RUN_TEST(colaprior2);
+  RUN_TEST(avl1);
 
 
   return 0;
