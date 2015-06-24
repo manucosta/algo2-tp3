@@ -71,8 +71,24 @@ void check2() {
 
 int main() {
 
-	RUN_TEST(check1);
-	RUN_TEST(check2);
+	//RUN_TEST(check1);
+  //RUN_TEST(check2);
 
-  	return 0;
+  ColaPrior<int> c;
+
+  c.Encolar(0);
+  c.Encolar(3);
+  c.Encolar(4);
+  int a;
+  a = c.Desencolar();
+  std::cout << a << std::endl;
+  
+  a = c.Desencolar();
+
+  std::cout << a << std::endl;
+  a = c.Desencolar();
+  
+  std::cout << a << std::endl;
+
+  return 0;
 }
