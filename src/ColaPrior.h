@@ -1,8 +1,10 @@
 #ifndef COLAPRIOR_H
 #define COLAPRIOR_H
 
-#include <iostream>
 #include "aed2.h"
+#include <iostream>
+
+using namespace std;
 
 template<class T>
 class ColaPrior {
@@ -41,10 +43,6 @@ private:
 	void Intercambiar(Nodo*, Nodo* );
 };
 
-//Operador de comparación (como no-miembro)
-template<class T>
-bool operator==(const Arreglo<T>&, const Arreglo<T>&);
-
 template<class T>
 ColaPrior<T>::ColaPrior(): cabeza(NULL), tam(0) {}
 
@@ -64,6 +62,7 @@ template<class T>
 void ColaPrior<T>::Encolar(const T elem) {
 	Nodo* nuevo = new Nodo(elem);
 	if(tam == 0){
+		cout<<"Encolo: "<<nuevo->dato<<endl;
 		cabeza = nuevo;
 	}else{
 		//Armo el recorrido hasta la primer posición libre
@@ -80,8 +79,7 @@ void ColaPrior<T>::Encolar(const T elem) {
 		recorridoHastaUltimo.Comienzo();
 		Lista<Nat>::Iterador it = recorridoHastaUltimo.CrearIt();
 		while(it.HaySiguiente()){
-			if (it.Siguiente() == 0)
-			{
+			if (it.Siguiente() == 0){
 				padreNuevo = padreNuevo->izq;
 			}else{
 				padreNuevo = padreNuevo->der;
@@ -98,8 +96,13 @@ void ColaPrior<T>::Encolar(const T elem) {
 
 		//Reposiciono el nuevo elemento donde corresponde
 		Nodo* actual = nuevo;
+		/**DEBUG**/
+		std::cout << "Encolo: "<< actual->dato<< std::endl;
 		while(actual->padre != NULL && actual->padre->dato > actual->dato){
-			Intercambiar(actual->padre, actual);
+			T x = actual->dato;
+			actual->dato = actual->padre->dato;
+			actual->padre->dato = x;
+			actual = actual->padre;
 		}
 	}
 	tam++;
@@ -108,8 +111,9 @@ void ColaPrior<T>::Encolar(const T elem) {
 template<class T>
 T& ColaPrior<T>::Desencolar(){
 	assert(!Vacia());
-	T& res = cabeza->dato;
+	T res = Proximo();
 	if (tam == 1){
+	 	std::cout<< cabeza->dato << std::endl;
 	 	delete cabeza;
 	 	cabeza = NULL;
 	 }else{
@@ -133,14 +137,13 @@ T& ColaPrior<T>::Desencolar(){
 			it.Avanzar();
 		}
 
-		//Quito el ultimo nodo y lo pongo como nueva cabeza
-		//En este cacho hay un problema con la memoria
-		std::cout<< ultimo->dato;//debug
+		/**DEBUG**/
+		//std::cout<< ultimo->dato << std::endl;
 		if(recorridoHastaUltimo.Ultimo() == 1){
-			Nodo* papa = ultimo->padre;//der
+			Nodo* papa = ultimo->padre;
 			papa->der = NULL;
 		}else{
-			Nodo* papa = ultimo->padre;//izq
+			Nodo* papa = ultimo->padre;
 			papa->izq = NULL;
 		}
 		
@@ -155,61 +158,25 @@ T& ColaPrior<T>::Desencolar(){
 		while((actual->izq != NULL && actual->dato > actual->izq->dato) || 
 				(actual->der != NULL && actual->dato > actual->der->dato)){
 			
+			T x = actual->dato;
 			if(actual->der == NULL || actual->dato > actual->izq->dato){
-				Intercambiar(actual, actual->izq);
+				actual->dato = actual->izq->dato;
+				actual->izq->dato = x;
+				actual = actual->izq;
 			}else{
-				Intercambiar(actual, actual->der);
+				actual->dato = actual->der->dato;
+				actual->der->dato = x;
+				actual = actual->der;
 			}
 		}
-
 	}
 	tam--;
 	return res;
 }
 
 template<class T>
-void ColaPrior<T>::Intercambiar(Nodo* padre, Nodo* hijo){
-	if(hijo == padre->izq){
-		Nodo* derechaPadre = padre->der;
-		padre->der         = hijo->der;
-		padre->izq         = hijo->izq;
-		hijo->izq          = padre;
-		hijo->der          = derechaPadre;
-	}else{
-		Nodo* izquierdaPadre = padre->izq;
-		padre->der         	= hijo->der;
-		padre->izq        	= hijo->izq;
-		hijo->der         	= padre;
-		hijo->izq          	= izquierdaPadre;
-	}
-
-	hijo->padre = padre->padre;
-	padre->padre = hijo;
-	if(hijo->padre == NULL){
-		this->cabeza = hijo;
-	}
-}
-
-template<class T>
 T& ColaPrior<T>::Proximo() const{
 	return cabeza->dato;
 }
-
-/**
-template<class T>
-bool operator==(const ColaPrior<T>& cola1, const ColaPrior<T>& cola2){
-	bool vacia_1 = cola1.Vacia();
-	bool vacia_2 = cola2.Vacia();
-	if(vacia_1 == vacia_2){
-		if(!vacia_1){
-			T& min1 = cola1.Desencolar();
-			T& min2 = cola2.Desencolar();
-
-		}
-	}else{
-		return false;
-	}
-}
-**/
 
 #endif
