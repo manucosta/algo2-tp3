@@ -63,17 +63,23 @@ void colaprior2() {
 	ASSERT_EQ(a, 100);
 }
 
+
+orden comp_int(const int a, const int b){
+  if(a<b) return LT;
+  else if(a==b) return EQ;
+  else return GT;
+}
+
 void avl1(){
-  DiccAvl<int, int> dicc;
+  DiccLog<int, int> dicc(&comp_int);
 
-
-  ASSERT_EQ(dicc.Definido(1), false);
+  ASSERT_EQ(dicc.Definido(1), false); 
   ASSERT_EQ(dicc.Definido(2), false);
   ASSERT_EQ(dicc.Definido(3), false);
   ASSERT_EQ(dicc.Definido(4), false);
-  ASSERT_EQ(dicc.Definido(5), false);
+  ASSERT_EQ(dicc.Definido(5), false); 
   dicc.Definir(1,1);
-  dicc.Definir(2,1);
+  dicc.Definir(2,1); 
   dicc.Definir(3,1);
   dicc.Definir(4,1);
   dicc.Definir(5,1);
@@ -89,7 +95,6 @@ void avl1(){
   dicc.Definir(4,4);
   ASSERT_EQ(dicc.Definido(4), true);
 } 
-
 
 int main() {
 

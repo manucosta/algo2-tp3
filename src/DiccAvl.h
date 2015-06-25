@@ -7,15 +7,15 @@
 using namespace std;
 
 template<class K, class S>
-class DiccAvl {
+class DiccLog {
 public:
   void Definir(const K clave, const S significado);
   bool Definido(const K clave);
   void Borrar(const K clave);
   
-  DiccAvl();
+  DiccLog(orden(*comp)(const K, const K));
   
-  ~DiccAvl();
+  ~DiccLog();
 
 private:
 	struct Nodo {
@@ -30,6 +30,8 @@ private:
 
   Nodo** raiz;
   Nodo* raiz2;
+
+  orden(*compar)(const K, const K);
 
 	int max(int a, int b){return (a>b)?a:b;}
 	void actualizarAltura(Nodo* p);
@@ -66,13 +68,14 @@ private:
 
 
 template <typename K, typename S>
-DiccAvl<K,S>::DiccAvl(){
+DiccLog<K,S>::DiccLog(orden(*comp)(const K, const K)){
+  compar = comp;
   raiz2 = NULL;
   raiz = &raiz2;
 }
 
 template <typename K, typename S>
-DiccAvl<K,S>::~DiccAvl(){
+DiccLog<K,S>::~DiccLog(){
   while(*raiz != NULL){
     Borrar((*raiz)->clave);
   }
@@ -80,14 +83,14 @@ DiccAvl<K,S>::~DiccAvl(){
 
 
 template <typename K, typename S>
-void DiccAvl<K,S>::actualizarAltura(Nodo* p){
+void DiccLog<K,S>::actualizarAltura(Nodo* p){
 	if (p != NULL){
 		p->altura = 1 + max(alturaNodo(p->izq),alturaNodo(p->der));	
 	}
 }
 
 template <typename K, typename S>
-int DiccAvl<K, S>::altura(Nodo* p){
+int DiccLog<K, S>::altura(Nodo* p){
 	if (p != NULL){
 		return 1 + max(altura(p->izq),altura(p->der));	
 	}
@@ -96,7 +99,7 @@ int DiccAvl<K, S>::altura(Nodo* p){
 
 
 template <typename K, typename S>
-void DiccAvl<K, S>::rotarSimple(Nodo** a, bool rota_izq){
+void DiccLog<K, S>::rotarSimple(Nodo** a, bool rota_izq){
 	Nodo* a1;
 	if (rota_izq){
     a1 = (*a)->izq;
@@ -115,7 +118,7 @@ void DiccAvl<K, S>::rotarSimple(Nodo** a, bool rota_izq){
 
 
 template <typename K, typename S>
-void DiccAvl<K, S>::rotarDoble(Nodo** a, bool rota_izq){
+void DiccLog<K, S>::rotarDoble(Nodo** a, bool rota_izq){
 	if (rota_izq){
 		rotarSimple(&((*a)->izq),false);
 		rotarSimple(a,true);
@@ -127,7 +130,7 @@ void DiccAvl<K, S>::rotarDoble(Nodo** a, bool rota_izq){
 
 
 template <typename K, typename S>
-void DiccAvl<K, S>::balancear(Nodo** a){
+void DiccLog<K, S>::balancear(Nodo** a){
 	if(*a!=NULL){
     if (alturaNodo((*a)->izq) >= alturaNodo((*a)->der)){
 			if( alturaNodo((*a)->izq) - alturaNodo((*a)->der) == 2){
@@ -146,7 +149,7 @@ void DiccAvl<K, S>::balancear(Nodo** a){
 }
 
 template <typename K, typename S>
-void DiccAvl<K, S>::_Definir(Nodo** d, const K k, const S s){
+void DiccLog<K, S>::_Definir(Nodo** d, const K k, const S s){
 
   if(*d == NULL){
     Nodo * nuevo = new Nodo;
@@ -156,7 +159,7 @@ void DiccAvl<K, S>::_Definir(Nodo** d, const K k, const S s){
 
     *d = nuevo;
   } else {
-    if(k < (*d)->clave){
+    if(compar(k, (*d)->clave) == LT){
       _Definir(&((*d)->izq), k, s);
     } else {
       _Definir(&((*d)->der), k, s);
@@ -168,20 +171,20 @@ void DiccAvl<K, S>::_Definir(Nodo** d, const K k, const S s){
 }
 
 template <typename K, typename S>
-void DiccAvl<K, S>::Definir(const K clav, const S signif){
+void DiccLog<K, S>::Definir(const K clav, const S signif){
   _Definir(raiz, clav, signif);
 }
 
 
 
 template <typename K, typename S>
-bool DiccAvl<K, S>::_Definido(Nodo** d, const K k){
+bool DiccLog<K, S>::_Definido(Nodo** d, const K k){
   if(*d == NULL){
     return false;
-  } else {
-    if(k < (*d)->clave){
+  } else { 
+    if(compar(k, (*d)->clave) == LT){
       return _Definido(&((*d)->izq), k);
-    } else if(k > (*d)->clave){
+    } else if(compar(k, (*d)->clave) == GT){
       return _Definido(&((*d)->der), k);
     } else {
       return true;
@@ -192,12 +195,12 @@ bool DiccAvl<K, S>::_Definido(Nodo** d, const K k){
 
 
 template <typename K, typename S>
-void DiccAvl<K, S>::_Borrar(Nodo** d, const K k){
+void DiccLog<K, S>::_Borrar(Nodo** d, const K k){
   Nodo * aux;
 
-  if(k < (*d)->clave){
+  if(compar(k, (*d)->clave) == LT){
     _Borrar(&(*d)->izq, k);
-  } else if(k > (*d)->clave){
+  } else if(compar(k, (*d)->clave) == GT){
     _Borrar(&(*d)->der, k);
   } else{
     if((*d)->izq == NULL && (*d)->der == NULL){
@@ -226,13 +229,13 @@ void DiccAvl<K, S>::_Borrar(Nodo** d, const K k){
 
 
 template <typename K, typename S>
-bool DiccAvl<K, S>::Definido(const K clav){
+bool DiccLog<K, S>::Definido(const K clav){
   return _Definido(raiz, clav);
 }
 
 
 template <typename K, typename S>
-void DiccAvl<K, S>::Borrar(const K clav){
+void DiccLog<K, S>::Borrar(const K clav){
   _Borrar(raiz, clav);
 }
 
