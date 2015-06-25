@@ -3,6 +3,7 @@
 #include "ColaPrior.h"
 #include "DiccAvl.h"
 #include "ConjAVL.h"
+#include "red.h"
 #include "aed2.h"
 #include "../mini_test.h"
 
