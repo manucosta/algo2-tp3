@@ -20,23 +20,23 @@ public:
 
 private:
 	struct Nodo {
-		K clave;
+    Nodo(){}
+		Nodo(K clav, S signif):clave(clav), significado(signif), altura(1), izq(NULL),der(NULL){}
+    K clave;
 		S significado;
-		int altura;
+		Nat altura;
 		Nodo* izq;
 		Nodo* der;
-		Nodo(K clav, S signif):significado(signif), clave(clav), izq(NULL),der(NULL),altura(1){}
-	  Nodo(){}
   };
 
-  Nodo** raiz;
   Nodo* raiz2;
+  Nodo** raiz;
 
   orden(*compar)(const K, const K);
 
-	int max(int a, int b){return (a>b)?a:b;}
+	Nat max(Nat a, Nat b){return (a>b)?a:b;}
 	void actualizarAltura(Nodo* p);
-	int altura(Nodo* p);
+	Nat altura(Nodo* p);
   void rotarSimple(Nodo** a, bool rota_izq);
 	void rotarDoble(Nodo** a, bool rota_izq);
 	void balancear(Nodo** a);
@@ -45,7 +45,6 @@ private:
   bool _Definido(Nodo** d, K k);
   void _Borrar(Nodo** d, K k);
   S _Obtener(Nodo** d, K k);
-
 
 
   Nodo borrarMin(Nodo** d){
@@ -65,7 +64,7 @@ private:
     }
   }
 
-  int alturaNodo(Nodo * n){return n? n->altura : 0;}
+  Nat alturaNodo(Nodo * n){return n? n->altura : 0;}
 };
 
 
@@ -92,7 +91,7 @@ void DiccLog<K,S>::actualizarAltura(Nodo* p){
 }
 
 template <typename K, typename S>
-int DiccLog<K, S>::altura(Nodo* p){
+Nat DiccLog<K, S>::altura(Nodo* p){
 	if (p != NULL){
 		return 1 + max(altura(p->izq),altura(p->der));	
 	}

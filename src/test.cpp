@@ -23,25 +23,15 @@ orden comp_nat(const Nat a, const Nat b){
 }
 
 void colaprior1() {
-	ColaPrior<int> c(comp_int);
-	c.Encolar(1);
-	c.Encolar(-1);
-	c.Encolar(2);
-	c.Encolar(0);
-	c.Encolar(100);
-	c.Encolar(200);
-	c.Encolar(200);
-	c.Encolar(300);
+  ColaPrior<int> cola(comp_int);
 
-	int a = c.Desencolar();
-	int b = c.Desencolar();
-	int d = c.Desencolar();
-	int e = c.Desencolar();
+  for(int i = 1000; i >= 0; i--){
+    cola.Encolar(i*i);
+  }
 
-	ASSERT_EQ(a, -1);
-	ASSERT_EQ(b, 0);
-	ASSERT_EQ(e, 2);
-	ASSERT_EQ(d, 1);
+  for(int i = 0; i < 1000; i++){
+    ASSERT_EQ(cola.Desencolar(), i*i);
+  }
 }
 
 void colaprior2() {
