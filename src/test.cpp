@@ -2,6 +2,7 @@
 #include <assert.h>
 #include "ColaPrior.h"
 #include "DiccAvl.h"
+#include "ConjAVL.h"
 #include "aed2.h"
 #include "../mini_test.h"
 
@@ -77,7 +78,7 @@ void colaprior2() {
 }
 
 
-void avl1(){
+void diccavl1(){
   DiccLog<int, int> dicc(&comp_int);
 
   ASSERT_EQ(dicc.Definido(1), false); 
@@ -104,13 +105,42 @@ void avl1(){
   ASSERT_EQ(dicc.Definido(4), true);
 
   ASSERT_EQ(dicc.Obtener(4), 4);
+}
+
+
+
+void conjavl1(){
+  ConjLog<int> conj(&comp_int);
+
+  for(int i = 0; i<1000; i++){
+    ASSERT_EQ(conj.Pertenece(i*i), false);
+  }
+
+
+  for(int i = 0; i<1000; i++){
+    conj.Agregar(i*i);
+  }
+
+  for(int i = 0; i<1000; i++){
+    ASSERT_EQ(conj.Pertenece(i*i), true);
+  }
+
+
+  for(int i = 0; i<1000; i++){
+    conj.Eliminar(i*i);
+  }
+
+  for(int i = 0; i<1000; i++){
+    ASSERT_EQ(conj.Pertenece(i*i), false);
+  }
 } 
 
 int main() {
 
   RUN_TEST(colaprior1);
   RUN_TEST(colaprior2);
-  RUN_TEST(avl1);
+  RUN_TEST(diccavl1);
+  RUN_TEST(conjavl1);
 
 
   return 0;
