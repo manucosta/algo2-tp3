@@ -7,8 +7,21 @@
 
 using namespace std;
 
+orden comp_int(const int a, const int b){
+  if(a<b) return LT;
+  else if(a==b) return EQ;
+  else return GT;
+}
+
+
+orden comp_nat(const Nat a, const Nat b){
+  if(a<b) return LT;
+  else if(a==b) return EQ;
+  else return GT;
+}
+
 void colaprior1() {
-	ColaPrior<int> c;
+	ColaPrior<int> c(comp_int);
 	c.Encolar(1);
 	c.Encolar(-1);
 	c.Encolar(2);
@@ -30,7 +43,7 @@ void colaprior1() {
 }
 
 void colaprior2() {
-	ColaPrior<Nat> c;
+	ColaPrior<Nat> c(comp_nat);
 	c.Encolar(100);
 	c.Encolar(20);
 	c.Encolar(20);
@@ -64,12 +77,6 @@ void colaprior2() {
 }
 
 
-orden comp_int(const int a, const int b){
-  if(a<b) return LT;
-  else if(a==b) return EQ;
-  else return GT;
-}
-
 void avl1(){
   DiccLog<int, int> dicc(&comp_int);
 
@@ -79,27 +86,30 @@ void avl1(){
   ASSERT_EQ(dicc.Definido(4), false);
   ASSERT_EQ(dicc.Definido(5), false); 
   dicc.Definir(1,1);
-  dicc.Definir(2,1); 
-  dicc.Definir(3,1);
-  dicc.Definir(4,1);
-  dicc.Definir(5,1);
+  dicc.Definir(2,11); 
+  dicc.Definir(3,123);
+  dicc.Definir(4,10);
+  dicc.Definir(5,7);
   ASSERT_EQ(dicc.Definido(1), true);
   ASSERT_EQ(dicc.Definido(2), true);
   ASSERT_EQ(dicc.Definido(3), true);
   ASSERT_EQ(dicc.Definido(4), true);
   ASSERT_EQ(dicc.Definido(5), true);
 
+  ASSERT_EQ(dicc.Obtener(4), 10);
 
   dicc.Borrar(4);
   ASSERT_EQ(dicc.Definido(4), false);
   dicc.Definir(4,4);
   ASSERT_EQ(dicc.Definido(4), true);
+
+  ASSERT_EQ(dicc.Obtener(4), 4);
 } 
 
 int main() {
 
-  //RUN_TEST(colaprior1);
-  //RUN_TEST(colaprior2);
+  RUN_TEST(colaprior1);
+  RUN_TEST(colaprior2);
   RUN_TEST(avl1);
 
 

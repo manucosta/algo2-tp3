@@ -11,7 +11,7 @@ class ColaPrior {
 public:
 	//Constructor por defecto: crea una cola vacía
 	//Cumple con el diseño de Vacia()
-	ColaPrior();
+	ColaPrior(orden(*comp)(const T, const T));
 
 	//Destructor
 	~ColaPrior();
@@ -39,6 +39,7 @@ private:
 
 	Nodo* cabeza;
 	Nat tam;
+  orden(*compar)(const T, const T);
 
 	void Intercambiar(Nodo* padre, Nodo* hijo){
     if(hijo == padre -> izq){
@@ -108,7 +109,7 @@ private:
 };
 
 template<class T>
-ColaPrior<T>::ColaPrior(): cabeza(NULL), tam(0) {}
+ColaPrior<T>::ColaPrior(orden(*comp)(const T, const T)): cabeza(NULL), tam(0), compar(comp) {}
 
 template<class T>
 ColaPrior<T>::~ColaPrior(){
@@ -164,7 +165,7 @@ void ColaPrior<T>::Encolar(const T elem) {
 
 		//Reposiciono el nuevo elemento donde corresponde
 		Nodo* actual = nuevo;
-    while(actual->padre != NULL && actual->padre->dato > actual->dato){
+    while(actual->padre != NULL && compar(actual->padre->dato, actual->dato) == GT){
       Intercambiar(actual->padre, actual); 
     }
 
@@ -219,27 +220,13 @@ T ColaPrior<T>::Desencolar(){
 
 		//Bajo el elemento que esta en la cabeza hasta que se restablezca el invariante
 		Nodo* actual = cabeza;
-		/*while((actual->izq != NULL && actual->dato > actual->izq->dato) || 
-				(actual->der != NULL && actual->dato > actual->der->dato)){
-			
-			T x = actual->dato;
-			if(actual->der == NULL || actual->dato > actual->izq->dato){
-				actual->dato = actual->izq->dato;
-				actual->izq->dato = x;
-				actual = actual->izq;
-			}else{
-				actual->dato = actual->der->dato;
-				actual->der->dato = x;
-				actual = actual->der;
-			}
-		}*/
 
-    while((actual->izq != NULL && actual->dato > actual->izq->dato) || (actual->der != NULL && actual->dato > actual->der->dato)){
+    while((actual->izq != NULL && compar(actual->dato, actual->izq->dato) == GT) || (actual->der != NULL && compar(actual->dato, actual->der->dato) == GT)){
       if(actual->der == NULL){
-        if(actual->izq->dato < actual->dato)
+        if(compar(actual->izq->dato, actual->dato) == LT)
           Intercambiar(actual, actual->izq);
       } else {
-        if(actual->izq->dato < actual->dato && actual->izq->dato < actual->der->dato){
+        if(compar(actual->izq->dato, actual->dato) == LT && compar(actual->izq->dato, actual->der->dato) == LT){
           Intercambiar(actual, actual->izq);
         } else {
           Intercambiar(actual, actual->der);

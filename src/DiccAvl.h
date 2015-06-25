@@ -12,6 +12,7 @@ public:
   void Definir(const K clave, const S significado);
   bool Definido(const K clave);
   void Borrar(const K clave);
+  S Obtener(const K clave);
   
   DiccLog(orden(*comp)(const K, const K));
   
@@ -43,6 +44,7 @@ private:
   void _Definir(Nodo** d, K k, S s);
   bool _Definido(Nodo** d, K k);
   void _Borrar(Nodo** d, K k);
+  S _Obtener(Nodo** d, K k);
 
 
 
@@ -193,6 +195,10 @@ bool DiccLog<K, S>::_Definido(Nodo** d, const K k){
 }
 
 
+template <typename K, typename S>
+bool DiccLog<K, S>::Definido(const K clav){
+  return _Definido(raiz, clav);
+}
 
 template <typename K, typename S>
 void DiccLog<K, S>::_Borrar(Nodo** d, const K k){
@@ -229,16 +235,29 @@ void DiccLog<K, S>::_Borrar(Nodo** d, const K k){
 
 
 template <typename K, typename S>
-bool DiccLog<K, S>::Definido(const K clav){
-  return _Definido(raiz, clav);
-}
-
-
-template <typename K, typename S>
 void DiccLog<K, S>::Borrar(const K clav){
   _Borrar(raiz, clav);
 }
 
+
+template <typename K, typename S>
+S DiccLog<K, S>::_Obtener(Nodo** d, const K k){
+  if(compar(k, (*d)->clave) == EQ){
+    return (*d)->significado;
+  } else if(compar(k, (*d)->clave) == LT){
+    return _Obtener(&((*d)->izq), k);
+  } else {
+    return _Obtener(&((*d)->der), k);
+  }
+}
+
+
+
+
+template <typename K, typename S>
+S DiccLog<K, S>::Obtener(const K clav){
+  return  _Obtener(raiz, clav);
+}
 
 
 
