@@ -130,11 +130,12 @@ void conjavl1(){
 void red(){
 	Red r;
 	compu com1, com2, com3;
-	Conj<interfaz> c1, c2;
+	Conj<interfaz> c1, c2, c3;
 	c1.Agregar(1);
 	c2.Agregar(1);
 	r.AgregarComputadora(com1,c1);
 	r.AgregarComputadora(com2,c2);	
+	r.AgregarComputadora(com3,c3);
 	r.Conectar(com1,com2,1,1);
 	ASSERT_EQ(r.Conectadas(com1,com2), true);
 	ASSERT_EQ(r.Conectadas(com1,com3), false);
