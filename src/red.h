@@ -2,6 +2,7 @@
 #define RED_H
 
 #include "aed2.h"
+#include "dicc_trie.h"
 #include "defines.h"
 #include <iostream>
 
@@ -13,50 +14,85 @@ public:
   Red();
   ~Red();
 
-  void AgregarComputadora(Compu c, Conj<Interfaz> is);
-  void Conectar(Compu c1, Compu c2, Interfaz i1, Interfaz i2);
-  bool Conectadas(Compu c1, Compu c2);
-  Conj<Compu> Computadoras();
-  Interfaz InterfazUsada(Compu c1, Compu c2);
-  Conj<Compu> Vecinos(Compu c);
-  bool UsaInterfaz(Compu c, Interfaz i);
-  Conj<Lista<Compu> > CaminosMinimos(Compu c1, Compu c2);
-  bool HayCamino(Compu c1, Compu c2);
-  Conj<Lista<Compu> > CaminosDeLargoN(Compu c1, Compu c2, Nat n);
+  void AgregarComputadora(compu c, Conj<interfaz> is);
+  void Conectar(compu c1, compu c2, interfaz i1, interfaz i2);
+  bool Conectadas(compu c1, compu c2);
+  Conj<compu> Computadoras();
+  interfaz InterfazUsada(compu c1, compu c2);
+  Conj<compu> Vecinos(compu c);
+  bool UsaInterfaz(compu c, interfaz i);
+  Conj<Lista<compu> > CaminosMinimos(compu c1, compu c2);
+  bool HayCamino(compu c1, compu c2);
+  Conj<Lista<compu> > CaminosDeLargoN(compu c1, compu c2, Nat n);
 
 
 private:
-  DiccString<DiccString<Interfaz> > vecinos;
-  DiccString<Conj<Interfaz> > interfaces;
+  DiccString<DiccString<interfaz> > vecinos;
+  DiccString<Conj<interfaz> > interfaces;
 
 };
 Red::Red(){
-	vecinos = DiccString<DiccString<Interfaz> >();
-	interfaces = DiccString<Conj<Interfaz> >();
+	vecinos = DiccString<DiccString<interfaz> >();
+	interfaces = DiccString<Conj<interfaz> >();
 	}
 Red::~Red(){
-	vecinos.~DiccString<DiccString<Interfaz> >();
-	interfaces.~DiccString<Conj<Interfaz> >();
+//	vecinos.~DiccString<DiccString<interfaz> >();
+//	interfaces.~DiccString<Conj<interfaz> >();
 	}
-void Red::AgregarComputadora(Compu c, Conj<Interfaz> is){
-	DiccString<Interfaz> vacio;
+void Red::AgregarComputadora(compu c, Conj<interfaz> is){
+	DiccString<interfaz> vacio;
 	vecinos.definir(c, vacio);
 	interfaces.definir(c,is);
 	}
 
-void Red::Conectar(Compu c1, Compu c2, Interfaz i1, Interfaz i2){
-	DiccString<Interfaz>* x;
+void Red::Conectar(compu c1, compu c2, interfaz i1, interfaz i2){
+	DiccString<interfaz>* x;
 	x = vecinos.obtener(c1);
 	x->definir(c2,i1);
-	DiccString<Interfaz>* y;
+	DiccString<interfaz>* y;
 	y = vecinos.obtener(c2);
 	y->definir(c1,i2);
 	}
 
-bool Red::Conectadas(Compu c1, Compu c2){
-	DiccString<Interfaz>* x = vecinos.obtener(c1);
+bool Red::Conectadas(compu c1, compu c2){
+	DiccString<interfaz>* x = vecinos.obtener(c1);
 	bool res = x->definido(c2);
 	return res;
 	}
+
+Conj<compu> Red::Computadoras(){
+	vector<compu> vec;
+	vec = interfaces.claves();
+	Conj<compu> con;
+	while(!(vec.EsVacio())){
+		con.Agregar(vec.Ultimo());
+		vec.TirarUltimos(1);
+		}
+	return con;
+	}
+
+interfaz Red::InterfazUsada(compu c1, compu c2){
+	
+	}
+
+Conj<compu> Red::Vecinos(compu c){
+	
+	}
+
+bool Red::UsaInterfaz(compu c, interfaz i){
+	
+	
+	}
+
+Conj<Lista<compu> > Red::CaminosMinimos(compu c1, compu c2){
+	
+	
+	}
+
+bool Red::HayCamino(compu c1, compu c2){
+	
+	
+	}
+
 
 #endif
