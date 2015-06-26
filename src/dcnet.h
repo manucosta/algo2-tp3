@@ -1,6 +1,7 @@
 #ifndef DCNET_H
 #define DCNET_H
 
+#include "aed2.h"
 #include "ColaPrior.h"
 #include "DiccAvl.h"
 #include "ConjAVL.h"
@@ -38,11 +39,14 @@ private:
 		Nat cantidadEnviados;
 	};
 
-	DiccString<Compu> proximaEnCamino;
-	DiccString<InfoPaquetes> paquetes;
+	Red red;
 	Lista<Lista<Compu> > caminosRecorridos;
 	struct {Nat cuantosEnvio ; Compu cualCompu;} laQueMasEnvio;
-	Red red;
+	DiccString<Compu> proximaEnCamino;
+	DiccString<InfoPaquetes> paquetes;
+	
+	
+
 };
 
 
