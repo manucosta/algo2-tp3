@@ -126,12 +126,29 @@ void conjavl1(){
   }
 } 
 
+
+void red(){
+	Red r;
+	compu com1, com2, com3;
+	Conj<interfaz> c1, c2;
+	c1.Agregar(1);
+	c2.Agregar(1);
+	r.AgregarComputadora(com1,c1);
+	r.AgregarComputadora(com2,c2);	
+	r.Conectar(com1,com2,1,1);
+	ASSERT_EQ(r.Conectadas(com1,com2), true);
+	ASSERT_EQ(r.Conectadas(com1,com3), false);
+	}
+
+
 int main() {
 
   RUN_TEST(colaprior1);
   RUN_TEST(colaprior2);
   RUN_TEST(diccavl1);
   RUN_TEST(conjavl1);
+  RUN_TEST(red);
+
 
 
   return 0;
