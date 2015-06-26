@@ -129,8 +129,8 @@ void conjavl1(){
 
 void red(){
 	Red r;
-	compu com1, com2, com3;
-	Conj<interfaz> c1, c2, c3;
+	Compu com1, com2, com3;
+	Conj<Interfaz> c1, c2, c3;
 	c1.Agregar(1);
 	c2.Agregar(1);
 	r.AgregarComputadora(com1,c1);

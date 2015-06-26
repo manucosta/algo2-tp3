@@ -1,9 +1,11 @@
 #ifndef DEFINES_H
 #define DEFINES_H
-#include <string.h>
+#include "aed2.h"
 
-typedef std::string compu;
-typedef unsigned int interfaz;
+typedef String Compu;
+typedef Nat Interfaz;
+typedef Nat Id;
+typedef Nat Prioridad;
 
 
 
