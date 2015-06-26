@@ -30,6 +30,7 @@ private:
   DiccString<Conj<Interfaz> > interfaces;
 
 };
+
 Red::Red(){
 	vecinos = DiccString<DiccString<Interfaz> >();
 	interfaces = DiccString<Conj<Interfaz> >();
@@ -58,7 +59,7 @@ bool Red::Conectadas(Compu c1, Compu c2){
 	bool res = x->definido(c2);
 	return res;
 	}
-/*
+/**
 Conj<Compu> Red::Computadoras(){
 	vector<Compu> vec;
 	vec = interfaces.claves();
@@ -69,7 +70,7 @@ Conj<Compu> Red::Computadoras(){
 		}
 	return con;
 	}
-*/
+**/
 Interfaz Red::InterfazUsada(Compu c1, Compu c2){
 	
 	}

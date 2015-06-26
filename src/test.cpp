@@ -126,7 +126,6 @@ void conjavl1(){
   }
 } 
 
-
 void red(){
 	Red r;
 	Compu com1, com2, com3;

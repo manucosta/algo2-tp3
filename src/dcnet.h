@@ -33,6 +33,7 @@ public:
 
 private:
 	struct InfoPaquetes{
+		InfoPaquetes() : colas()
 		ColaPrior<Paquete> colas;
 		DiccLog<Paquete, Lista<Lista<Compu> >::Iterador> diccPaqCamino;
 		ConjLog<Paquete> conjPaquetes;
@@ -44,6 +45,26 @@ private:
 	struct {Nat cuantosEnvio ; Compu cualCompu;} laQueMasEnvio;
 	DiccString<Compu> proximaEnCamino;
 	DiccString<InfoPaquetes> paquetes;
+
+	orden ComparId(Paquete p1, Paquete p2){
+		if(p1.id < p2.id){
+			return LT;
+		}else if(p1.id == p2.id){
+			return EQ;
+		}else{
+			return GT;
+		}
+	}
+
+	orden ComparPrioridad(Paquete p1, Paquete p2){
+		if(p1.prioridad < p2.prioridad){
+			return LT;
+		}else if(p1.prioridad == p2.prioridad){
+			return EQ;
+		}else{
+			return GT;
+		}
+	}
 	
 	
 
