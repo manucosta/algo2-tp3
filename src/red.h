@@ -58,7 +58,7 @@ bool Red::Conectadas(Compu c1, Compu c2){
 	bool res = x->definido(c2);
 	return res;
 	}
-
+/*
 Conj<Compu> Red::Computadoras(){
 	vector<Compu> vec;
 	vec = interfaces.claves();
@@ -69,7 +69,7 @@ Conj<Compu> Red::Computadoras(){
 		}
 	return con;
 	}
-
+*/
 Interfaz Red::InterfazUsada(Compu c1, Compu c2){
 	
 	}
@@ -91,6 +91,10 @@ Conj<Lista<Compu> > Red::CaminosMinimos(Compu c1, Compu c2){
 bool Red::HayCamino(Compu c1, Compu c2){
 	
 	
+	}
+
+Conj<Lista<Compu> > Red::CaminosDeLargoN(Compu c1, Compu c2, Nat n){
+
 	}
 
 
