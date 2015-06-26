@@ -2,8 +2,6 @@
 #define RED_H
 
 #include "aed2.h"
-#include "dicc_trie.h"
-#include "Conj.h"
 #include "defines.h"
 #include <iostream>
 
