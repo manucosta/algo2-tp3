@@ -126,9 +126,6 @@ bool ColaPrior<T>::Vacia() const {
 template<class T>
 void ColaPrior<T>::Encolar(const T elem) {
 
-
-  
-
 	Nodo* nuevo = new Nodo(elem);
 	if(tam == 0){	
 		cabeza = nuevo;
@@ -213,7 +210,9 @@ T ColaPrior<T>::Desencolar(){
 		}
 		
 		ultimo->der = cabeza->der;
+		if(cabeza->der != NULL) cabeza->der->padre = ultimo;
 		ultimo->izq = cabeza->izq;
+		if(cabeza->izq != NULL) cabeza->izq->padre = ultimo;
 		ultimo->padre = NULL;
 		delete cabeza;
 		cabeza = ultimo;
@@ -221,22 +220,20 @@ T ColaPrior<T>::Desencolar(){
 		//Bajo el elemento que esta en la cabeza hasta que se restablezca el invariante
 		Nodo* actual = cabeza;
 
-    while((actual->izq != NULL && compar(actual->dato, actual->izq->dato) == GT) || (actual->der != NULL && compar(actual->dato, actual->der->dato) == GT)){
-      if(actual->der == NULL){
-        if(compar(actual->izq->dato, actual->dato) == LT)
-          Intercambiar(actual, actual->izq);
-      } else {
-        if(compar(actual->izq->dato, actual->dato) == LT && compar(actual->izq->dato, actual->der->dato) == LT){
-          Intercambiar(actual, actual->izq);
-        } else {
-          Intercambiar(actual, actual->der);
-        }
-      }  
-    }
+    	while((actual->izq != NULL && compar(actual->dato, actual->izq->dato) == GT) || (actual->der != NULL && compar(actual->dato, actual->der->dato) == GT)){
+      		if(actual->der == NULL){
+        		if(compar(actual->izq->dato, actual->dato) == LT)
+          			Intercambiar(actual, actual->izq);
+      			} else {
+        			if(compar(actual->izq->dato, actual->dato) == LT && compar(actual->izq->dato, actual->der->dato) == LT){
+          				Intercambiar(actual, actual->izq);
+        			} else {
+          				Intercambiar(actual, actual->der);
+        		}
+      		}  
+    	}
 	}
 	tam--;
- 
-
 	return res;
 }
 
