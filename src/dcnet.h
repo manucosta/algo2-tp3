@@ -6,16 +6,10 @@
 #include "DiccAvl.h"
 #include "ConjAVL.h"
 #include "red.h"
+#include "defines.h"
 #include <iostream>
 
 using namespace std;
-
-struct Paquete{
-	Id id;
-	Prioridad prioridad;
-	Compu origen;
-	Compu destino;
-};
 
 class DcNet{
 public:

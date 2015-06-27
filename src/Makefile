@@ -4,7 +4,7 @@ DEBUG = -g -O0
 CPPFLAGS = -I /aed2 -Wall $(DEBUG)
 
 all:
-	g++ $(CPPFLAGS) test.cpp -o test
+	$(CC) $(CPPFLAGS) test.cpp -o test
 
 clean:
 	rm -f  test
