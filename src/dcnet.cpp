@@ -10,20 +10,20 @@ DcNet::DcNet(const Red& r){
 	proximaEnCamino = DiccString<DiccString<Compu> >();
 	while(it.HaySiguiente()) {
 	    Conj<Compu>::Iterador it2 = compus.CrearIt();
-	    DiccString<Compu*> diccActual;
+	    DiccString<Compu> diccActual;
 	    InfoPaquetes tupInfoPaquetes;
 	    tupInfoPaquetes.cantidadEnviados = 0;
 	    paquetes.definir(it.Siguiente(), tupInfoPaquetes);
 	    while(it2.HaySiguiente()){
 	        Conj<Lista<Compu> > camMinimos = red.CaminosMinimos(it.Siguiente(), it2.Siguiente());
-	        Conj<Compu>::Iterador it3 = camMinimos.CrearIt();
+	        Conj<Lista<Compu> >::Iterador it3 = camMinimos.CrearIt();
 	        Lista<Compu> caminoMinimo = it3.Siguiente();
 	        caminoMinimo.Fin();
-	        Compu* siguiente = &(caminoMinimo.Primero());
-	        diccActual.Definir(it2.Siguiente(), siguiente);
+	        Compu siguiente = caminoMinimo.Primero();
+	        diccActual.definir(it2.Siguiente(), siguiente);
 	        it2.Avanzar();
 	    }
-	    proximaEnCamino.definir(it.Siguiente, diccActual);
+	    proximaEnCamino.definir(it.Siguiente(), diccActual);
 	    it.Avanzar();
 	}
 }

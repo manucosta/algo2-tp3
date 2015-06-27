@@ -48,6 +48,7 @@ private:
 	}
 
 	struct InfoPaquetes{
+		InfoPaquetes(): cantidadEnviados(0) {}
 		ColaPrior<Paquete> colas(orden ComparPrioridad(Paquete, Paquete));
 		DiccLog<Paquete, Lista<Lista<Compu> >::Iterador> diccPaqCamino(orden ComparId(Paquete, Paquete));
 		ConjLog<Paquete> conjPaquetes(orden ComparId(Paquete, Paquete));
