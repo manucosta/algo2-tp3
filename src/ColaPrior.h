@@ -39,7 +39,7 @@ private:
 
 	Nodo* cabeza;
 	Nat tam;
-  orden(*compar)(const T, const T);
+  	orden(*compar)(const T, const T);
 
 	void Intercambiar(Nodo* padre, Nodo* hijo){
     if(hijo == padre -> izq){

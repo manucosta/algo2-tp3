@@ -26,19 +26,6 @@ public:
 	const Compu& LaQueMasEnvio() const;
 
 private:
-	struct InfoPaquetes{
-		InfoPaquetes() : colas()
-		ColaPrior<Paquete> colas;
-		DiccLog<Paquete, Lista<Lista<Compu> >::Iterador> diccPaqCamino;
-		ConjLog<Paquete> conjPaquetes;
-		Nat cantidadEnviados;
-	};
-
-	Red red;
-	Lista<Lista<Compu> > caminosRecorridos;
-	struct {Nat cuantosEnvio ; Compu cualCompu;} laQueMasEnvio;
-	DiccString<Compu> proximaEnCamino;
-	DiccString<InfoPaquetes> paquetes;
 
 	orden ComparId(Paquete p1, Paquete p2){
 		if(p1.id < p2.id){
@@ -59,6 +46,21 @@ private:
 			return GT;
 		}
 	}
+
+	struct InfoPaquetes{
+		ColaPrior<Paquete> colas(orden ComparPrioridad(Paquete, Paquete));
+		DiccLog<Paquete, Lista<Lista<Compu> >::Iterador> diccPaqCamino(orden ComparId(Paquete, Paquete));
+		ConjLog<Paquete> conjPaquetes(orden ComparId(Paquete, Paquete));
+		Nat cantidadEnviados;
+	};
+
+	Red red;
+	Lista<Lista<Compu> > caminosRecorridos;
+	struct {Nat cuantosEnvio ; Compu cualCompu;} laQueMasEnvio;
+	DiccString<DiccString<Compu> > proximaEnCamino;
+	DiccString<InfoPaquetes> paquetes;
+
+
 	
 	
 
