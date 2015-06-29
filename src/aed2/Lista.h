@@ -675,6 +675,13 @@ bool operator == (const Lista<T>& l1, const Lista<T>& l2)
   return not it1.HaySiguiente() and not it2.HaySiguiente();
 }
 
+
+template <typename T>
+bool operator != (const Lista<T>& l1, const Lista<T>& l2)
+{
+  return !(l1 == l2);
+}
+
 }
 
 #endif // AED2_LISTA_H_INCLUDED

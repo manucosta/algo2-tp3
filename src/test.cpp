@@ -244,7 +244,7 @@ void conjavl2(){
 
 void red(){
 	Red r;
-	Compu com1, com2, com3;
+	Compu com1 = "compu1", com2 = "compu2", com3 = "compu3";
 	Conj<Interfaz> c1, c2, c3;
 	c1.Agregar(1);
 	c2.Agregar(1);
@@ -254,16 +254,36 @@ void red(){
 	r.Conectar(com1,com2,1,1);
 	ASSERT_EQ(r.Conectadas(com1,com2), true);
 	ASSERT_EQ(r.Conectadas(com1,com3), false);
-	}
+}
+
+class X{
+  public:
+    X(){
+      x = 0;
+      y = NULL;
+    }
+
+    bool operator==(const X x1){ return true;}
+    bool operator!=(const X x1){ return false;}
+  private:
+    int x;
+    int * y;
+};
 
 
 int main() {
-
+/*
   RUN_TEST(colaprior1);
   RUN_TEST(colaprior2);
   RUN_TEST(diccavl1);
   RUN_TEST(diccavl2);
   RUN_TEST(conjavl1);
+<<<<<<< HEAD
+  RUN_TEST(red);
+*/
+  DiccString<int> dicc;
+  //dicc.claves();
+
   RUN_TEST(conjavl2);
   //RUN_TEST(red);
 

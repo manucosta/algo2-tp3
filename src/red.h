@@ -11,7 +11,6 @@ using namespace std;
 class Red {
 public:
   Red();
-  ~Red();
 
   void AgregarComputadora(Compu c, Conj<Interfaz> is);
   void Conectar(Compu c1, Compu c2, Interfaz i1, Interfaz i2);
@@ -31,19 +30,17 @@ private:
 
 };
 
+
 Red::Red(){
-	vecinos = DiccString<DiccString<Interfaz> >();
-	interfaces = DiccString<Conj<Interfaz> >();
-	}
-Red::~Red(){
-//	vecinos.~DiccString<DiccString<Interfaz> >();
-//	interfaces.~DiccString<Conj<Interfaz> >();
-	}
+	DiccString<DiccString<Interfaz> > vecinos;
+	DiccString<Conj<Interfaz> > interfaces;
+}
+
 void Red::AgregarComputadora(Compu c, Conj<Interfaz> is){
 	DiccString<Interfaz> vacio;
 	vecinos.definir(c, vacio);
-	interfaces.definir(c,is);
-	}
+	//interfaces.definir(c,is);
+}
 
 void Red::Conectar(Compu c1, Compu c2, Interfaz i1, Interfaz i2){
 	DiccString<Interfaz>* x;
@@ -52,51 +49,75 @@ void Red::Conectar(Compu c1, Compu c2, Interfaz i1, Interfaz i2){
 	DiccString<Interfaz>* y;
 	y = vecinos.obtener(c2);
 	y->definir(c1,i2);
-	}
+}
 
 bool Red::Conectadas(Compu c1, Compu c2){
 	DiccString<Interfaz>* x = vecinos.obtener(c1);
 	bool res = x->definido(c2);
 	return res;
-	}
-/**
+}
+
+
 Conj<Compu> Red::Computadoras(){
-	vector<Compu> vec;
-	vec = interfaces.claves();
-	Conj<Compu> con;
-	while(!(vec.EsVacio())){
-		con.Agregar(vec.Ultimo());
-		vec.TirarUltimos(1);
-		}
+	vector<string> vec = vecinos.claves();
+  
+  Conj<Compu> con;
+  for(unsigned int i = 0; i<vec.size(); i++){
+    con.Agregar(vec[i]);
+  }
+
 	return con;
-	}
-**/
+}
+
+
 Interfaz Red::InterfazUsada(Compu c1, Compu c2){
-	
-	}
+  DiccString<Interfaz> * x = vecinos.obtener(c1);
+  return *(x->obtener(c2));
+}
 
 Conj<Compu> Red::Vecinos(Compu c){
-	
-	}
+  DiccString<unsigned int> * x = vecinos.obtener(c);
+
+	vector<string> vec = x->claves();
+  
+  Conj<Compu> con;
+  for(unsigned int i = 0; i<vec.size(); i++){
+    con.Agregar(vec[i]);
+  }
+  return con;
+}
 
 bool Red::UsaInterfaz(Compu c, Interfaz i){
-	
-	
-	}
+  DiccString<unsigned int> * x = vecinos.obtener(c);
+
+  DiccString<unsigned int>::Iterador it(x);
+
+  while(1){
+    if(*(it.valorActual()) == i) return true;
+    if(!it.avanzar()) break; 
+  }
+}
 
 Conj<Lista<Compu> > Red::CaminosMinimos(Compu c1, Compu c2){
 	
 	
-	}
+}
 
 bool Red::HayCamino(Compu c1, Compu c2){
 	
 	
-	}
+}
 
 Conj<Lista<Compu> > Red::CaminosDeLargoN(Compu c1, Compu c2, Nat n){
-
-	}
+  Conj<Lista<Compu> > caminos;
+  if(n == 0){
+    Lista<Compu> camino;
+    camino.AgregarAtras(c1);
+    caminos.AgregarRapido(camino);
+  } else {
+    //Conj<Compu> vec = this->vecinos(c1);
+  }
+}
 
 
 #endif
