@@ -96,15 +96,24 @@ bool Red::UsaInterfaz(Compu c, Interfaz i){
     if(*(it.valorActual()) == i) return true;
     if(!it.avanzar()) break; 
   }
+
+  return false;
 }
 
 Conj<Lista<Compu> > Red::CaminosMinimos(Compu c1, Compu c2){
-	
+  Nat k = 1;
+  Nat n = Computadoras().Cardinal();
+
+  while(k<n && CaminosDeLargoN(c1,c2,k).EsVacio()){
+    k++;
+  }
+
+  return CaminosDeLargoN(c1,c2,k);
 	
 }
 
 bool Red::HayCamino(Compu c1, Compu c2){
-	
+  return !(CaminosMinimos(c1,c2).EsVacio());
 	
 }
 
@@ -115,8 +124,36 @@ Conj<Lista<Compu> > Red::CaminosDeLargoN(Compu c1, Compu c2, Nat n){
     camino.AgregarAtras(c1);
     caminos.AgregarRapido(camino);
   } else {
-    //Conj<Compu> vec = this->vecinos(c1);
+    Conj<Compu> vec = this->Vecinos(c1);
+    Conj<Compu>::Iterador itVecinos(vec);
+    while(itVecinos.HaySiguiente()){
+      Compu v = itVecinos.Siguiente();
+      Conj<Lista<Compu> > cams = this->CaminosDeLargoN(v, c2, n-1);
+
+      Conj<Lista<Compu> >::Iterador itCaminos(cams);
+
+      while(itCaminos.HaySiguiente()){
+        Lista<Compu> camino = itCaminos.Siguiente();
+        if(camino.Ultimo() == c2){
+          Lista<Compu> camino2 = camino;
+          camino2.AgregarAdelante(c1);
+          caminos.Agregar(camino2);
+        }
+        itCaminos.Avanzar();
+      }
+      itVecinos.Avanzar();
+    }
   }
+
+  Conj<Lista<Compu> >::Iterador itCaminos(caminos);
+  while(itCaminos.HaySiguiente()){
+    if(itCaminos.Siguiente().Ultimo() != c2){
+      itCaminos.EliminarSiguiente();
+    }
+    itCaminos.Avanzar(); //esta linea faltaba en el tp
+  }
+
+  return caminos;
 }
 
 

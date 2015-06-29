@@ -78,11 +78,11 @@ class Conj
         void EliminarAnterior();
         void EliminarSiguiente();
 
+
+        Iterador(Conj<T>& c);
       private:
       
         typename Dicc<T,bool>::Iterador it_dicc_;
-
-        Iterador(Conj<T>& c);
 
         Iterador(const typename Dicc<T,bool>::Iterador& itDict);
 
