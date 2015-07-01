@@ -15,6 +15,7 @@ public:
   void Eliminar(const T x);
   
   ConjLog(orden(*compar)(const T, const T));
+  ConjLog(){c = NULL;}
   
   ~ConjLog();
 

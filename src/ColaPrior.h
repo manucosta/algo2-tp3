@@ -13,8 +13,10 @@ public:
 	//Cumple con el diseño de Vacia()
 	ColaPrior(orden(*comp)(const T, const T));
 
+	ColaPrior(){cabeza = NULL; tam = 0; compar = NULL;}
+
 	//Destructor
-	~ColaPrior();
+	~ColaPrior(); 
 
 	//
 	bool Vacia() const;

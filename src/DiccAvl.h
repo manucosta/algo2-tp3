@@ -15,6 +15,7 @@ public:
   S Obtener(const K clave);
   
   DiccLog(orden(*comp)(const K, const K));
+  DiccLog(){raiz = NULL; raiz2 = NULL; compar = NULL;}
   
   ~DiccLog();
 

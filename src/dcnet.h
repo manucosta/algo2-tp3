@@ -11,6 +11,26 @@
 using namespace std;
 
 
+	orden ComparId(const PaqueteN p1, const PaqueteN p2){
+		if(p1.id < p2.id){
+			return LT;
+		}else if(p1.id == p2.id){
+			return EQ;
+		}else{
+			return GT;
+		}
+	}
+
+	orden ComparPrioridad(const PaqueteN p1, const PaqueteN p2){
+		if(p1.prioridad < p2.prioridad){
+			return LT;
+		}else if(p1.prioridad == p2.prioridad){
+			return EQ;
+		}else{
+			return GT;
+		}
+	}
+
 class DcNet{
 public:
 	DcNet(Red&); //es const por dicc_trie, rompe todo
@@ -27,30 +47,21 @@ public:
 
 private:
 
-	orden ComparId(PaqueteN p1, PaqueteN p2){
-		if(p1.id < p2.id){
-			return LT;
-		}else if(p1.id == p2.id){
-			return EQ;
-		}else{
-			return GT;
-		}
-	}
 
-	orden ComparPrioridad(PaqueteN p1, PaqueteN p2){
-		if(p1.prioridad < p2.prioridad){
-			return LT;
-		}else if(p1.prioridad == p2.prioridad){
-			return EQ;
-		}else{
-			return GT;
-		}
-	}
 
 	typedef struct InfoPaquetes_t{
-		ColaPrior<PaqueteN> cola(orden ComparPrioridad(PaqueteN, PaqueteN));
-		DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador> diccPaqCamino(orden ComparId(PaqueteN, PaqueteN));
-		ConjLog<PaqueteN> conjPaquetes(orden ComparId(PaqueteN, PaqueteN));
+		
+		InfoPaquetes_t(){
+			//cola((orden(*)(const PaqueteN, const PaqueteN)) &ComparPrioridad);
+			cola(&ComparPrioridad);
+			diccPaqCamino(&ComparId);
+			conjPaquetes(&ComparId);
+			cantidadEnviados = 0;
+		}
+		
+		ColaPrior<PaqueteN> cola; //(orden ComparPrioridad(PaqueteN, PaqueteN));
+		DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador> diccPaqCamino; //(orden ComparId(PaqueteN, PaqueteN));
+		ConjLog<PaqueteN> conjPaquetes; //(orden ComparId(PaqueteN, PaqueteN));
 		Nat cantidadEnviados;
 	} InfoPaquetes;
 
@@ -73,12 +84,15 @@ DcNet::DcNet(Red& r){
 	DiccString<DiccString<Compu> >proximaEnCamino;
 	cout << endl;
   while(it.HaySiguiente()) {
-	    
+	      
 	    DiccString<Compu> diccActual;
-	    InfoPaquetes tupInfoPaquetes;
+	    
+			/*InfoPaquetes tupInfoPaquetes;
 	    tupInfoPaquetes.cantidadEnviados = 0;
 	    paquetes.definir(it.Siguiente(), tupInfoPaquetes);
-	    Conj<Compu>::Iterador it2 = compus.CrearIt();
+	    */
+			
+			Conj<Compu>::Iterador it2 = compus.CrearIt();
 
 		
 			while(it2.HaySiguiente()){
@@ -107,17 +121,45 @@ DcNet::DcNet(Red& r){
 	}
 }
 
-void AvanzarSegundo(){
-	struct paquetesAEnv{
-		PaqueteN p;
-		Lista<Id>::Iterador it;
-	};
+struct paquetesAEnv{
+	paquetesAEnv(const paquetesAEnv& paq) {
+	  p = paq.p;
+		it = paq.it;
+	}
+	PaqueteN p;
+	Lista<Id>::Iterador it;
+};
 
-	//Lista<struct paquetesAEnv> paquetesAEnviar;
+void DcNet::AvanzarSegundo(){
+	Lista<struct paquetesAEnv> paquetesAEnviar;
+	DiccString<InfoPaquetes>::Iterador it(&paquetes);
+	//se rompe si dicc es vacio,deberiamos hacer el assert
+
+	do{
+		InfoPaquetes s = *(it.valorActual());
+		ColaPrior<PaqueteN> scola = s.cola;
+		if(!scola.Vacia()){
+			PaqueteN estePaquete = scola.Desencolar();
+		}
+
+	}while(it.avanzar());
 
 
 }
 
+/*
+	typedef struct InfoPaquetes_t{
+		ColaPrior<PaqueteN> cola(orden ComparPrioridad(PaqueteN, PaqueteN));
+		DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador> diccPaqCamino(orden ComparId(PaqueteN, PaqueteN));
+		ConjLog<PaqueteN> conjPaquetes(orden ComparId(PaqueteN, PaqueteN));
+		Nat cantidadEnviados;
+	} InfoPaquetes;
 
+	Red* red;
+	Lista<Lista<Compu> > caminosRecorridos;
+	struct {Nat cuantosEnvio ; Compu cualCompu;} laQueMasEnvio;
+	DiccString<DiccString<Compu> > proximaEnCamino;
+	DiccString<InfoPaquetes> paquetes;
+*/
 
 #endif // DCNET_H

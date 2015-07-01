@@ -1,0 +1,6 @@
+In file included from test.cpp:7:0:
+dcnet.h: In member function ‘void DcNet::AvanzarSegundo()’:
+dcnet.h:142:33: error: conversion from ‘ColaPrior<PaqueteN>*’ to non-scalar type ‘ColaPrior<PaqueteN>’ requested
+   ColaPrior<PaqueteN> scola = s.cola;
+                                 ^
+make: *** [all] Error 1
