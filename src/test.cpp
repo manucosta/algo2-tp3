@@ -4,7 +4,7 @@
 #include "DiccAvl.h"
 #include "ConjAVL.h"
 #include "red.h"
-//#include "dcnet.h"
+#include "dcnet.h"
 #include "../mini_test.h"
 
 
@@ -258,6 +258,31 @@ void red(){
 	r.Conectar(com1,com2,1,1);
 	ASSERT_EQ(r.Conectadas(com1,com2), true);
 	ASSERT_EQ(r.Conectadas(com1,com3), false);
+
+
+	Conj<Compu> compus = r.Computadoras(); 
+	Conj<Compu>::Iterador it = compus.CrearIt();
+	while(it.HaySiguiente()){
+		std::cout << it.Siguiente() << endl;
+	  it.Avanzar();
+	}
+
+
+	Conj<Lista<Compu> > cams = r.CaminosMinimos(com1, com2); 
+	Conj<Lista<Compu> >::Iterador it2 = cams.CrearIt();
+	while(it2.HaySiguiente()){
+		cout << "camino" << endl;
+		Lista<Compu> camino = it2.Siguiente();
+		Lista<Compu>::Iterador it3 = camino.CrearIt();
+		while(it3.HaySiguiente()){
+			cout << "\t" << it3.Siguiente() << endl;
+			it3.Avanzar();
+		}
+	  it2.Avanzar();
+	}
+
+
+  //Conj<Lista<Compu> > caminos_minimos = CaminosMinimos(Compu c1, Compu c2);
 }
 
 void dcnet(){
@@ -267,12 +292,14 @@ void dcnet(){
 	Conj<Interfaz> c1, c2, c3;
 	c1.Agregar(1);
 	c2.Agregar(1);
+	c3.Agregar(1);
 	r.AgregarComputadora(com1,c1);
 	r.AgregarComputadora(com2,c2);	
 	r.AgregarComputadora(com3,c3);
 	r.Conectar(com1,com2,1,1);
+	r.Conectar(com3,com2,1,1);
   /***/
-  //DcNet d(r);
+  DcNet d(r);
 }
 
 int main() {
@@ -284,11 +311,9 @@ int main() {
   RUN_TEST(conjavl1);
   RUN_TEST(red);
 
-  DiccString<int> dicc;
-
   RUN_TEST(conjavl2);
   RUN_TEST(red);
-	//RUN_TEST(dcnet);
+	RUN_TEST(dcnet);
 
 
 

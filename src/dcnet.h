@@ -13,7 +13,7 @@ using namespace std;
 
 class DcNet{
 public:
-	DcNet(const Red&);
+	DcNet(Red&); //es const por dicc_trie, rompe todo
 	//~DcNet();
 
 	void CrearPaquete(const PaqueteN& paq);
@@ -54,7 +54,7 @@ private:
 		Nat cantidadEnviados;
 	} InfoPaquetes;
 
-	Red& red;
+	Red* red;
 	Lista<Lista<Compu> > caminosRecorridos;
 	struct {Nat cuantosEnvio ; Compu cualCompu;} laQueMasEnvio;
 	DiccString<DiccString<Compu> > proximaEnCamino;
@@ -63,34 +63,61 @@ private:
 };
 
 
-DcNet::DcNet(const Red& r){
-	red = r;
-	/*caminosRecorridos = Lista<Lista<Compu> >();
-	Conj<Compu> compus = red.Computadoras();
+DcNet::DcNet(Red& r){
+	red = &r;
+	caminosRecorridos = Lista<Lista<Compu> >();
+	Conj<Compu> compus = red->Computadoras();
 	Conj<Compu>::Iterador it = compus.CrearIt();
 	laQueMasEnvio.cuantosEnvio = 0;
 	laQueMasEnvio.cualCompu = it.Siguiente();
-	proximaEnCamino = DiccString<DiccString<Compu> >();
-	while(it.HaySiguiente()) {
-	    Conj<Compu>::Iterador it2 = compus.CrearIt();
+	DiccString<DiccString<Compu> >proximaEnCamino;
+	cout << endl;
+  while(it.HaySiguiente()) {
+	    
 	    DiccString<Compu> diccActual;
 	    InfoPaquetes tupInfoPaquetes;
 	    tupInfoPaquetes.cantidadEnviados = 0;
 	    paquetes.definir(it.Siguiente(), tupInfoPaquetes);
-	    while(it2.HaySiguiente()){
-	        Conj<Lista<Compu> > camMinimos = red.CaminosMinimos(it.Siguiente(), it2.Siguiente());
+	    Conj<Compu>::Iterador it2 = compus.CrearIt();
+
+		
+			while(it2.HaySiguiente()){
+					Compu siguiente;
+					Compu c1 = it.Siguiente();
+					Compu c2 = it2.Siguiente();
+					Conj<Lista<Compu> > camMinimos = red->CaminosMinimos(c1, c2);
 	        Conj<Lista<Compu> >::Iterador it3 = camMinimos.CrearIt();
-	        Lista<Compu> caminoMinimo = it3.Siguiente();
-	        caminoMinimo.Fin();
-	        Compu siguiente = caminoMinimo.Primero();
-	        diccActual.definir(it2.Siguiente(), siguiente);
-	        it2.Avanzar();
+					
+	        
+					if(it3.HaySiguiente()){
+	          Lista<Compu> caminoMinimo = it3.Siguiente();
+	          caminoMinimo.Fin();
+	          Compu siguiente = caminoMinimo.Primero();
+			    } else {
+						siguiente = "";
+					} 
+				
+					diccActual.definir(it2.Siguiente(), siguiente);
+	        
+					it2.Avanzar();
 	    }
 	    proximaEnCamino.definir(it.Siguiente(), diccActual);
-	    it.Avanzar();
-	}*/
+	    	
+			it.Avanzar();
+	}
 }
 
 void AvanzarSegundo(){
+	struct paquetesAEnv{
+		PaqueteN p;
+		Lista<Id>::Iterador it;
+	};
+
+	//Lista<struct paquetesAEnv> paquetesAEnviar;
+
+
 }
+
+
+
 #endif // DCNET_H

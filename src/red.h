@@ -21,10 +21,10 @@ public:
   bool UsaInterfaz(Compu c, Interfaz i);
   Conj<Lista<Compu> > CaminosMinimos(Compu c1, Compu c2);
   bool HayCamino(Compu c1, Compu c2);
-  Conj<Lista<Compu> > CaminosDeLargoN(Compu c1, Compu c2, Nat n);
-
 
 private:
+  Conj<Lista<Compu> > CaminosDeLargoN(Compu c1, Compu c2, Nat n);
+
   DiccString<DiccString<Interfaz> > vecinos;
   DiccString<Conj<Interfaz> > interfaces;
 
@@ -39,7 +39,7 @@ Red::Red(){
 void Red::AgregarComputadora(Compu c, Conj<Interfaz> is){
 	DiccString<Interfaz> vacio;
 	vecinos.definir(c, vacio);
-	//interfaces.definir(c,is);
+	interfaces.definir(c,is);
 }
 
 void Red::Conectar(Compu c1, Compu c2, Interfaz i1, Interfaz i2){
@@ -103,12 +103,13 @@ bool Red::UsaInterfaz(Compu c, Interfaz i){
 Conj<Lista<Compu> > Red::CaminosMinimos(Compu c1, Compu c2){
   Nat k = 1;
   Nat n = Computadoras().Cardinal();
-
-  while(k<n && CaminosDeLargoN(c1,c2,k).EsVacio()){
-    k++;
+  Conj<Lista<Compu> > x = CaminosDeLargoN(c1, c2, k);
+ 
+	while(k<n && x.EsVacio()){
+    k++;	
+		x = CaminosDeLargoN(c1,c2, k);
   }
-
-  return CaminosDeLargoN(c1,c2,k);
+  return x;
 	
 }
 
@@ -118,7 +119,7 @@ bool Red::HayCamino(Compu c1, Compu c2){
 }
 
 Conj<Lista<Compu> > Red::CaminosDeLargoN(Compu c1, Compu c2, Nat n){
-  Conj<Lista<Compu> > caminos;
+  Conj<Lista<Compu> > caminos;	
   if(n == 0){
     Lista<Compu> camino;
     camino.AgregarAtras(c1);
@@ -138,19 +139,20 @@ Conj<Lista<Compu> > Red::CaminosDeLargoN(Compu c1, Compu c2, Nat n){
           Lista<Compu> camino2 = camino;
           camino2.AgregarAdelante(c1);
           caminos.Agregar(camino2);
-        }
+        } 
         itCaminos.Avanzar();
       }
       itVecinos.Avanzar();
     }
   }
 
-  Conj<Lista<Compu> >::Iterador itCaminos(caminos);
-  while(itCaminos.HaySiguiente()){
-    if(itCaminos.Siguiente().Ultimo() != c2){
-      itCaminos.EliminarSiguiente();
+  Conj<Lista<Compu> >::Iterador itCaminos2(caminos);
+  while(itCaminos2.HaySiguiente()){
+    if(itCaminos2.Siguiente().Ultimo() != c2){
+      itCaminos2.EliminarSiguiente();
     }
-    itCaminos.Avanzar(); //esta linea faltaba en el tp
+	   
+		if(itCaminos2.HaySiguiente()) itCaminos2.Avanzar(); //esta linea faltaba en el tp
   }
 
   return caminos;
