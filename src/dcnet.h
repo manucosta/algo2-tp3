@@ -11,7 +11,7 @@
 using namespace std;
 
 
-	orden ComparId(const PaqueteN p1, const PaqueteN p2){
+	orden ComparIdx(const PaqueteN p1, const PaqueteN p2){
 		if(p1.id < p2.id){
 			return LT;
 		}else if(p1.id == p2.id){
@@ -21,7 +21,7 @@ using namespace std;
 		}
 	}
 
-	orden ComparPrioridad(const PaqueteN p1, const PaqueteN p2){
+	orden ComparPrioridadx(const PaqueteN p1, const PaqueteN p2){
 		if(p1.prioridad < p2.prioridad){
 			return LT;
 		}else if(p1.prioridad == p2.prioridad){
@@ -51,13 +51,7 @@ private:
 
 	typedef struct InfoPaquetes_t{
 		
-		InfoPaquetes_t(){
-			//cola((orden(*)(const PaqueteN, const PaqueteN)) &ComparPrioridad);
-			cola(&ComparPrioridad);
-			diccPaqCamino(&ComparId);
-			conjPaquetes(&ComparId);
-			cantidadEnviados = 0;
-		}
+		InfoPaquetes_t() : cola(&ComparPrioridadx), diccPaqCamino(&ComparIdx), conjPaquetes(&ComparIdx), cantidadEnviados(0){}
 		
 		ColaPrior<PaqueteN> cola; //(orden ComparPrioridad(PaqueteN, PaqueteN));
 		DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador> diccPaqCamino; //(orden ComparId(PaqueteN, PaqueteN));
@@ -87,10 +81,9 @@ DcNet::DcNet(Red& r){
 	      
 	    DiccString<Compu> diccActual;
 	    
-			/*InfoPaquetes tupInfoPaquetes;
-	    tupInfoPaquetes.cantidadEnviados = 0;
+			InfoPaquetes tupInfoPaquetes; 
 	    paquetes.definir(it.Siguiente(), tupInfoPaquetes);
-	    */
+	    
 			
 			Conj<Compu>::Iterador it2 = compus.CrearIt();
 
