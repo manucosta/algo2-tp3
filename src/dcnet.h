@@ -33,10 +33,10 @@ orden ComparPrioridadx(const PaqueteN p1, const PaqueteN p2){
 
 class DcNet{
 public:
-	DcNet(Red&); //es const por dicc_trie, rompe todo
-	//~DcNet();
+	DcNet(Red *); //es const por dicc_trie, rompe todo
+	~DcNet();
 
-	void CrearPaquete(const PaqueteN& paq);
+	void CrearPaquete(PaqueteN paq);
 	void AvanzarSegundo();
 	const Red& ObtenerRed() const;
 	const Lista<Compu>& CaminoRecorrido(const PaqueteN& paq) const;
@@ -51,42 +51,47 @@ private:
 
 	typedef struct InfoPaquetes_t{
 		
-		InfoPaquetes_t() : cola(&ComparPrioridadx), diccPaqCamino(&ComparIdx), conjPaquetes(&ComparIdx), cantidadEnviados(0){}
+		InfoPaquetes_t() : cola(new ColaPrior<PaqueteN>(&ComparPrioridadx)),
+                       diccPaqCamino(new DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador>(&ComparIdx)),
+                       conjPaquetes(new ConjLog<PaqueteN>(&ComparIdx)),
+                       cantidadEnviados(0){}
 		
-		ColaPrior<PaqueteN> cola; //(orden ComparPrioridad(PaqueteN, PaqueteN));
-		DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador> diccPaqCamino; //(orden ComparId(PaqueteN, PaqueteN));
-		ConjLog<PaqueteN> conjPaquetes; //(orden ComparId(PaqueteN, PaqueteN));
+    ColaPrior<PaqueteN> * cola; //(orden ComparPrioridad(PaqueteN, PaqueteN));
+		DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador> * diccPaqCamino; //(orden ComparId(PaqueteN, PaqueteN));
+		ConjLog<PaqueteN> * conjPaquetes; //(orden ComparId(PaqueteN, PaqueteN));
 		Nat cantidadEnviados;
 	} InfoPaquetes;
 
 	Red* red;
 	Lista<Lista<Compu> > caminosRecorridos;
 	struct {Nat cuantosEnvio ; Compu cualCompu;} laQueMasEnvio;
-	DiccString<DiccString<Compu> > proximaEnCamino;
+	DiccString<DiccString<Compu> >  proximaEnCamino;
 	DiccString<InfoPaquetes> paquetes;
 
 };
 
 
-DcNet::DcNet(Red& r){
-	red = &r;
+DcNet::~DcNet(){ 
+  /* borrar InfoPaquetes*/
+}
+
+DcNet::DcNet(Red * r){
+	red = r;
 	caminosRecorridos = Lista<Lista<Compu> >();
 	Conj<Compu> compus = red->Computadoras();
 	Conj<Compu>::Iterador it = compus.CrearIt();
 	laQueMasEnvio.cuantosEnvio = 0;
 	laQueMasEnvio.cualCompu = it.Siguiente();
-	DiccString<DiccString<Compu> >proximaEnCamino;
-	cout << endl;
+	//DiccString<DiccString<Compu> >proximaEnCamino;
+  
   while(it.HaySiguiente()) {
-	      
 	    DiccString<Compu> diccActual;
 	    
 			InfoPaquetes tupInfoPaquetes; 
 	    paquetes.definir(it.Siguiente(), tupInfoPaquetes);
 	    
 			
-			Conj<Compu>::Iterador it2 = compus.CrearIt();
-
+			Conj<Compu>::Iterador it2 = compus.CrearIt(); 
 		
 			while(it2.HaySiguiente()){
 					Compu siguiente;
@@ -94,22 +99,20 @@ DcNet::DcNet(Red& r){
 					Compu c2 = it2.Siguiente();
 					Conj<Lista<Compu> > camMinimos = red->CaminosMinimos(c1, c2);
 	        Conj<Lista<Compu> >::Iterador it3 = camMinimos.CrearIt();
-					
-	        
-					if(it3.HaySiguiente()){
+				   
+					if(it3.HaySiguiente()){ 
 	          Lista<Compu> caminoMinimo = it3.Siguiente();
 	          caminoMinimo.Fin();
-	          Compu siguiente = caminoMinimo.Primero();
+	          siguiente = caminoMinimo.Primero();
 			    } else {
 						siguiente = "";
 					} 
-				
+
 					diccActual.definir(it2.Siguiente(), siguiente);
 	        
 					it2.Avanzar();
 	    }
-	    proximaEnCamino.definir(it.Siguiente(), diccActual);
-	    	
+	    proximaEnCamino.definir(it.Siguiente(), diccActual);	
 			it.Avanzar();
 	}
 }
@@ -125,8 +128,8 @@ struct paquetesAEnv{
 	Lista<Lista<Compu> >::Iterador it;
 };
 
-void DcNet::CrearPaquete(const PaqueteN& paq){
-  if(paq.origen != paq.destino){
+void DcNet::CrearPaquete(PaqueteN paq){
+  if(paq.origen != paq.destino){ 
     Lista<Compu> nuevoCaminoRecorrido;
     nuevoCaminoRecorrido.AgregarAtras(paq.origen);
 
@@ -134,9 +137,10 @@ void DcNet::CrearPaquete(const PaqueteN& paq){
 
     InfoPaquetes losPaquetes = *(paquetes.obtener(paq.origen));
 
-    losPaquetes.cola.Encolar(paq);
-    losPaquetes.conjPaquetes.Agregar(paq);
-    losPaquetes.diccPaqCamino.Definir(paq, it);
+
+    losPaquetes.cola->Encolar(paq);
+    losPaquetes.conjPaquetes->Agregar(paq);
+    losPaquetes.diccPaqCamino->Definir(paq, it);
   }
 }
 
@@ -148,35 +152,35 @@ void DcNet::AvanzarSegundo(){
 	//se rompe si dicc es vacio,deberiamos hacer el assert
 	do{
 		InfoPaquetes s = *(it.valorActual());	
-		if(!s.cola.Vacia()){
-			PaqueteN estePaquete = s.cola.Desencolar();
-      s.conjPaquetes.Eliminar(estePaquete);
+		if(!s.cola->Vacia()){
+			PaqueteN estePaquete = s.cola->Desencolar();
+      s.conjPaquetes->Eliminar(estePaquete);
       
-      struct paquetesAEnv x(estePaquete, s.diccPaqCamino.Obtener(estePaquete));
+      struct paquetesAEnv x(estePaquete, s.diccPaqCamino->Obtener(estePaquete));
       paquetesAEnviar.AgregarAtras(x);
 
-      s.diccPaqCamino.Borrar(estePaquete);
+      s.diccPaqCamino->Borrar(estePaquete);
       s.cantidadEnviados++;
       if(s.cantidadEnviados > laQueMasEnvio.cuantosEnvio){
         laQueMasEnvio.cuantosEnvio = s.cantidadEnviados;
         laQueMasEnvio.cualCompu = x.it.Siguiente().Ultimo();
       }
 		}
-	}while(it.avanzar());
+	}while(it.avanzar()); 
 
-  
 	Lista<struct paquetesAEnv>::Iterador it2 = paquetesAEnviar.CrearIt();
   while(it2.HaySiguiente()){
-    struct paquetesAEnv p = it2.Siguiente();
+    struct paquetesAEnv p = it2.Siguiente(); 
     DiccString<Compu> proximasCompus = *(proximaEnCamino.obtener(p.it.Siguiente().Ultimo()));
     Compu proximaCompu = *(proximasCompus.obtener(p.p.destino));
 
     if(proximaCompu != p.p.destino){ //esto estaba mal en el tp
+      
       InfoPaquetes paquetesDeProximaCompu = *(paquetes.obtener(proximaCompu));
       p.it.Siguiente().AgregarAtras(proximaCompu);
-      paquetesDeProximaCompu.cola.Encolar(p.p);
-      paquetesDeProximaCompu.conjPaquetes.Agregar(p.p);
-      paquetesDeProximaCompu.diccPaqCamino.Definir(p.p, p.it);
+      paquetesDeProximaCompu.cola->Encolar(p.p);
+      paquetesDeProximaCompu.conjPaquetes->Agregar(p.p);
+      paquetesDeProximaCompu.diccPaqCamino->Definir(p.p, p.it);
     }
     it2.Avanzar();
   }
@@ -189,16 +193,16 @@ const Red& DcNet::ObtenerRed() const{
 
 
 const Lista<Compu>& DcNet::CaminoRecorrido(const PaqueteN& paq) const{
-  /* dicc_trie esta mal hecho entonces no puede iterar diccionarios vacios */
+ /* dicc_trie esta mal hecho entonces no puede iterar diccionarios vacios */
 
   DiccString<InfoPaquetes>::Iterador it(const_cast<DiccString<DcNet::InfoPaquetes_t>*>(&paquetes)); //cosas raras del trie
 
-  while(!(it.valorActual()->conjPaquetes.Pertenece(paq))){
+  while(!(it.valorActual()->conjPaquetes->Pertenece(paq))){
     it.avanzar();
   }
 
-  DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador> d = it.valorActual()->diccPaqCamino;
-  return d.Obtener(paq).Siguiente();
+  DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador> * d = it.valorActual()->diccPaqCamino;
+  return d->Obtener(paq).Siguiente();
 }
 
 
@@ -214,7 +218,7 @@ bool DcNet::PaqueteEnTransito(const PaqueteN& paq) const{
   //como el iterador del trie es cualquiera, esto puede fallar
  
   bool res = true;
-  while(!(it.valorActual()->conjPaquetes.Pertenece(paq))){
+  while(!(it.valorActual()->conjPaquetes->Pertenece(paq))){
     if(!it.avanzar()) {
       res = false; 
       break;
@@ -226,12 +230,11 @@ bool DcNet::PaqueteEnTransito(const PaqueteN& paq) const{
 const ConjLog<PaqueteN>& DcNet::EnEspera(const Compu& c){
   //hay que sacarle el const de this, si no dicc_trie explota
   InfoPaquetes * info = paquetes.obtener(c);
-  return info->conjPaquetes;
+  return *(info->conjPaquetes);
 }
 
 
 const Compu& DcNet::LaQueMasEnvio() const{
   return laQueMasEnvio.cualCompu;
 }
-
 #endif // DCNET_H

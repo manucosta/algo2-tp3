@@ -299,7 +299,16 @@ void dcnet(){
 	r.Conectar(com1,com2,1,1);
 	r.Conectar(com3,com2,1,1);
   /***/
-  DcNet d(r);
+  DcNet d(&r);
+
+  PaqueteN p;
+  p.id = 0;
+  p.prioridad = 0;
+  p.origen = "compu1";
+  p.destino = "compu3";
+
+  d.CrearPaquete(p);
+  d.AvanzarSegundo();
 }
 
 int main() {
@@ -315,6 +324,7 @@ int main() {
   RUN_TEST(red);
 	RUN_TEST(dcnet);
 
+  
 
 
   return 0;

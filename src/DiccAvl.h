@@ -152,8 +152,7 @@ void DiccLog<K, S>::balancear(Nodo** a){
 
 template <typename K, typename S>
 void DiccLog<K, S>::_Definir(Nodo** d, const K k, const S s){
-
-  if(*d == NULL){
+  if(*d == NULL){ 
     Nodo * nuevo = new Nodo;
     nuevo->clave = k; nuevo->significado = s;
     nuevo->der = NULL; nuevo->izq = NULL;
@@ -161,13 +160,13 @@ void DiccLog<K, S>::_Definir(Nodo** d, const K k, const S s){
 
     *d = nuevo;
   } else {
-    if(compar(k, (*d)->clave) == LT){
+    if(compar(k, (*d)->clave) == LT){ 
       _Definir(&((*d)->izq), k, s);
-    } else {
+    } else { 
       _Definir(&((*d)->der), k, s);
     }
   }
-
+ 
   balancear(d);
   actualizarAltura(*d);
 }
