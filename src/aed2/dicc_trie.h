@@ -116,10 +116,10 @@ public:
     }
 
     ~DiccString()
-    {/*
+    {
         for(typename map<char,DiccString<T>*>::iterator it = siguiente.begin(); it != siguiente.end(); it++)
             delete (*it).second;
-        delete significado;*/
+        delete significado;
     }
 
     void definir(const string &clave, T &_significado)

@@ -24,13 +24,17 @@ orden ComparPrioridadx(const PaqueteN p1, const PaqueteN p2){
 /****Implementación de operaciones de DcNet****/
 
 DcNet::~DcNet(){ 
-/*  delete paquetes.cola;
-  paquetes.cola = NULL;
-  delete paquetes.diccPaqCamino;
-  paquetes.diccPaqCamino = NULL;
-  delete paquetes.conjPaquetes;
-  paquetes.conjPaquetes = NULL; 
-*/
+
+	DiccString<InfoPaquetes>::Iterador it(&paquetes);
+  do{
+    InfoPaquetes * info = it.valorActual();
+    delete info->cola;
+    info->cola = NULL;
+    delete info->diccPaqCamino;
+    info->diccPaqCamino = NULL;
+    delete info->conjPaquetes;
+    info->conjPaquetes = NULL;
+  }while(it.avanzar());
 }
 
 DcNet::DcNet(Red * r){

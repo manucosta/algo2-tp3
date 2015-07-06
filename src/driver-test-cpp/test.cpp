@@ -135,6 +135,9 @@ int main(int argc, char **argv)
      * La interacción con el TAD DcNet se debe hacer exclusivamente  *
 	 * a través de la interfaz del driver.                            *
 	 ******************************************************************/
-
+  
+ //valgrind --leak-check=full --show-leak-kinds=all ./test
+  
+  
 	return 0;
 }
