@@ -1,5 +1,5 @@
-#ifndef RED_H
-#define RED_H
+#ifndef RED_H_
+#define RED_H_
 
 #include "aed2.h"
 #include "defines.h"
@@ -14,13 +14,16 @@ public:
 
   void AgregarComputadora(Compu c, Conj<Interfaz> is);
   void Conectar(Compu c1, Compu c2, Interfaz i1, Interfaz i2);
-  bool Conectadas(Compu c1, Compu c2);
+  bool Conectadas(const Compu c1, const Compu c2);
   Conj<Compu> Computadoras();
-  Interfaz InterfazUsada(Compu c1, Compu c2);
+  Interfaz InterfazUsada(const Compu c1, const Compu c2);
   Conj<Compu> Vecinos(Compu c);
   bool UsaInterfaz(Compu c, Interfaz i);
   Conj<Lista<Compu> > CaminosMinimos(Compu c1, Compu c2);
   bool HayCamino(Compu c1, Compu c2);
+
+  //Para el driver
+  Conj<Interfaz> Interfaces(Compu c);
 
 private:
   Conj<Lista<Compu> > CaminosDeLargoN(Compu c1, Compu c2, Nat n);
@@ -70,7 +73,7 @@ Conj<Compu> Red::Computadoras(){
 }
 
 
-Interfaz Red::InterfazUsada(Compu c1, Compu c2){
+Interfaz Red::InterfazUsada(const Compu c1, const Compu c2){
   DiccString<Interfaz> * x = vecinos.obtener(c1);
   return *(x->obtener(c2));
 }
@@ -156,6 +159,10 @@ Conj<Lista<Compu> > Red::CaminosDeLargoN(Compu c1, Compu c2, Nat n){
   }
 
   return caminos;
+}
+
+Conj<Interfaz> Red::Interfaces(Compu c){
+  return *(interfaces.obtener(c));
 }
 
 

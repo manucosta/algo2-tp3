@@ -13,6 +13,7 @@ public:
   bool Definido(const K clave);
   void Borrar(const K clave);
   S Obtener(const K clave);
+  Nat CantidadClaves() const;
   
   DiccLog(orden(*comp)(const K, const K));
   DiccLog(){raiz = NULL; raiz2 = NULL; compar = NULL;}
@@ -32,6 +33,7 @@ private:
 
   Nodo* raiz2;
   Nodo** raiz;
+  Nat tam;
 
   orden(*compar)(const K, const K);
 
@@ -74,6 +76,7 @@ DiccLog<K,S>::DiccLog(orden(*comp)(const K, const K)){
   compar = comp;
   raiz2 = NULL;
   raiz = &raiz2;
+  tam = 0;
 }
 
 template <typename K, typename S>
@@ -174,6 +177,7 @@ void DiccLog<K, S>::_Definir(Nodo** d, const K k, const S s){
 template <typename K, typename S>
 void DiccLog<K, S>::Definir(const K clav, const S signif){
   _Definir(raiz, clav, signif);
+  tam++;
 }
 
 
@@ -236,6 +240,7 @@ void DiccLog<K, S>::_Borrar(Nodo** d, const K k){
 template <typename K, typename S>
 void DiccLog<K, S>::Borrar(const K clav){
   _Borrar(raiz, clav);
+  tam--;
 }
 
 
@@ -256,6 +261,11 @@ S DiccLog<K, S>::_Obtener(Nodo** d, const K k){
 template <typename K, typename S>
 S DiccLog<K, S>::Obtener(const K clav){
   return  _Obtener(raiz, clav);
+}
+
+template<typename K, typename S>
+Nat DiccLog<K, S>::CantidadClaves() const {
+  return tam;
 }
 
 

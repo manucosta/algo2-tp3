@@ -8,10 +8,10 @@ CFLAGS=-g -Wall
 LDFLAGS=
 
 # Agrear acá los directorios a incluir en la compilación
-INCDIR=../../../../../Modulos-CPP
+INCDIR=../
 
 # Agregar acá los archivos .cpp a compilar
-SOURCES=test.cpp Driver.cpp ArbolSintactico.cpp 
+SOURCES=test.cpp Driver.cpp 
 
 # Objetos que serán generados (no tocar)
 OBJECTS=$(SOURCES:.cpp=.o)

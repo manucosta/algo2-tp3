@@ -13,7 +13,8 @@ public:
   void Agregar(const T x);
   bool Pertenece(const T x);
   void Eliminar(const T x);
-  
+  Nat Cardinal() const;
+
   ConjLog(orden(*compar)(const T, const T));
   ConjLog(){c = NULL;}
   
@@ -51,6 +52,10 @@ void ConjLog<T>::Eliminar(const T x){
   return c->Borrar(x);
 }
 
+template <typename T>
+Nat ConjLog<T>::Cardinal() const {
+  return c->CantidadClaves();
+}
 
 
 

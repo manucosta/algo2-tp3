@@ -152,6 +152,7 @@ void diccavl2(){
   dicc.Definir(p3,123);
   dicc.Definir(p2,11); 
   dicc.Definir(p4,10);
+  ASSERT_EQ(dicc.CantidadClaves(), 5);
   ASSERT_EQ(dicc.Definido(p1), true);
   ASSERT_EQ(dicc.Definido(p2), true);
   ASSERT_EQ(dicc.Definido(p3), true);
@@ -162,6 +163,7 @@ void diccavl2(){
 
   dicc.Borrar(p4);
   ASSERT_EQ(dicc.Definido(p4), false);
+  ASSERT_EQ(dicc.CantidadClaves(), 4);
   dicc.Definir(p4,4);
   ASSERT_EQ(dicc.Definido(p4), true);
 
@@ -174,7 +176,7 @@ void conjavl1(){
   for(int i = 0; i<1000; i++){
     ASSERT_EQ(conj.Pertenece(i*i), false);
   }
-
+  ASSERT_EQ(conj.Cardinal()== 0, true);
 
   for(int i = 0; i<1000; i++){
     if(i%3 == 0){
@@ -183,7 +185,7 @@ void conjavl1(){
       conj.Agregar(-i*i);
     }
   }
-
+  ASSERT_EQ(conj.Cardinal()== 1000, true);
   for(int i = 0; i<1000; i++){
     if(i%3 == 0){
       ASSERT_EQ(conj.Pertenece(i*i), true);
@@ -200,6 +202,8 @@ void conjavl1(){
       conj.Eliminar(-i*i);
     }
   }
+
+  ASSERT_EQ(conj.Cardinal()==500, true);
 
   for(int i = 0; i<1000; i++){
     if(i % 2 == 0){
@@ -308,6 +312,7 @@ void dcnet(){
   p.destino = "compu3";
 
   d.CrearPaquete(p);
+  d.AvanzarSegundo();
   d.AvanzarSegundo();
 }
 

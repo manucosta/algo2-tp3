@@ -2,12 +2,16 @@
 #define DRIVER_H_
 
 #include "Tipos.h"
-#include "aed2/TiposBasicos.h"
-
-#include "../red.h"
-//#include "../dcnet.h"
+#include "../aed2.h"
+#include "../dcnet.h"
 
 namespace aed2 {
+
+orden comp_nat(const Nat a, const Nat b){
+    if(a<b) return LT;
+    else if(a==b) return EQ;
+    else return GT;
+}
 
 class Driver
 {
@@ -39,12 +43,12 @@ class Driver
        /// Observadores DCNet //////////////////////////////////////////////////////////////
     
         Nat CantidadNodosRecorridosPor(const Paquete& p) const;
-        const Computadora& IesimoNodoRecorridoPor(const Paquete& p) const;
+        const Computadora& IesimoNodoRecorridoPor(const Paquete& p, const Nat i) const;
 
         Nat CantidadEnviadosPor(const Computadora& c) const;
     
         Nat CantidadEnEsperaEn(const Computadora& c) const;
-        const Paquete& IesimoEnEsperaEn(const Computadora& c) const;
+        const Paquete& IesimoEnEsperaEn(const Computadora& c, const Nat i) const;
 
         /// Acciones DCNet ////////////////////////////////////////////////////////////
 
@@ -66,6 +70,9 @@ class Driver
      * con el cuál interactuar. Además, pueden declarar todas las        *
      * funciones auxiliares que les hagan falta.                         *
      *********************************************************************/
+        DcNet* dcnet;
+        Paquete proxPaq;
+        DiccLog<Paquete, PaqueteN>* paq2paqN;//Es medio bestia que los paquetes se acumulan y nunca se borran
 
 }; // class Driver
 

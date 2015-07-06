@@ -1,5 +1,5 @@
-#ifndef DCNET_H
-#define DCNET_H
+#ifndef DCNET_H_
+#define DCNET_H_
 #include "aed2.h"
 #include "ColaPrior.h"
 #include "DiccAvl.h"
@@ -38,25 +38,21 @@ public:
 
 	void CrearPaquete(PaqueteN paq);
 	void AvanzarSegundo();
-	const Red& ObtenerRed() const;
+	Red& ObtenerRed() const;
 	const Lista<Compu>& CaminoRecorrido(const PaqueteN& paq) const;
-	Nat CantidadEnviados(Compu& c);
+	Nat CantidadEnviados(const Compu& c);
 	const ConjLog<PaqueteN>& EnEspera(const Compu& c);
 	bool PaqueteEnTransito(const PaqueteN& paq) const;
 	const Compu& LaQueMasEnvio() const;
 
 private:
-
-
-
 	typedef struct InfoPaquetes_t{
-		
 		InfoPaquetes_t() : cola(new ColaPrior<PaqueteN>(&ComparPrioridadx)),
-                       diccPaqCamino(new DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador>(&ComparIdx)),
-                       conjPaquetes(new ConjLog<PaqueteN>(&ComparIdx)),
-                       cantidadEnviados(0){}
+        	               diccPaqCamino(new DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador>(&ComparIdx)),
+            	           conjPaquetes(new ConjLog<PaqueteN>(&ComparIdx)),
+                	       cantidadEnviados(0){}
 		
-    ColaPrior<PaqueteN> * cola; //(orden ComparPrioridad(PaqueteN, PaqueteN));
+    	ColaPrior<PaqueteN> * cola; //(orden ComparPrioridad(PaqueteN, PaqueteN));
 		DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador> * diccPaqCamino; //(orden ComparId(PaqueteN, PaqueteN));
 		ConjLog<PaqueteN> * conjPaquetes; //(orden ComparId(PaqueteN, PaqueteN));
 		Nat cantidadEnviados;
@@ -72,7 +68,13 @@ private:
 
 
 DcNet::~DcNet(){ 
-  /* borrar InfoPaquetes*/
+/*	delete paquetes.cola;
+	paquetes.cola = NULL;
+	delete paquetes.diccPaqCamino;
+	paquetes.diccPaqCamino = NULL;
+	delete paquetes.conjPaquetes;
+	paquetes.conjPaquetes = NULL;	
+*/
 }
 
 DcNet::DcNet(Red * r){
@@ -84,7 +86,7 @@ DcNet::DcNet(Red * r){
 	laQueMasEnvio.cualCompu = it.Siguiente();
 	//DiccString<DiccString<Compu> >proximaEnCamino;
   
-  while(it.HaySiguiente()) {
+	while(it.HaySiguiente()) {
 	    DiccString<Compu> diccActual;
 	    
 			InfoPaquetes tupInfoPaquetes; 
@@ -122,7 +124,7 @@ struct paquetesAEnv{
 	  p = paq.p;
 		it = paq.it;
 	}
-  paquetesAEnv(PaqueteN px, Lista<Lista<Compu> > ::Iterador itx) : p(px), it(itx) {}
+	paquetesAEnv(PaqueteN px, Lista<Lista<Compu> > ::Iterador itx) : p(px), it(itx) {}
 
 	PaqueteN p;
 	Lista<Lista<Compu> >::Iterador it;
@@ -169,28 +171,25 @@ void DcNet::AvanzarSegundo(){
 	}while(it.avanzar()); 
 
 	Lista<struct paquetesAEnv>::Iterador it2 = paquetesAEnviar.CrearIt();
-  while(it2.HaySiguiente()){
-    struct paquetesAEnv p = it2.Siguiente(); 
-    DiccString<Compu> proximasCompus = *(proximaEnCamino.obtener(p.it.Siguiente().Ultimo()));
-    Compu proximaCompu = *(proximasCompus.obtener(p.p.destino));
+  	while(it2.HaySiguiente()){
+	    struct paquetesAEnv p = it2.Siguiente(); 
+	    DiccString<Compu> proximasCompus = *(proximaEnCamino.obtener(p.it.Siguiente().Ultimo()));
+	    Compu proximaCompu = *(proximasCompus.obtener(p.p.destino));
 
-    if(proximaCompu != p.p.destino){ //esto estaba mal en el tp
-      
-      InfoPaquetes paquetesDeProximaCompu = *(paquetes.obtener(proximaCompu));
-      p.it.Siguiente().AgregarAtras(proximaCompu);
-      paquetesDeProximaCompu.cola->Encolar(p.p);
-      paquetesDeProximaCompu.conjPaquetes->Agregar(p.p);
-      paquetesDeProximaCompu.diccPaqCamino->Definir(p.p, p.it);
+	    if(proximaCompu != p.p.destino){ //esto estaba mal en el tp
+	        InfoPaquetes paquetesDeProximaCompu = *(paquetes.obtener(proximaCompu));
+		    p.it.Siguiente().AgregarAtras(proximaCompu);
+	    	paquetesDeProximaCompu.cola->Encolar(p.p);
+	    	paquetesDeProximaCompu.conjPaquetes->Agregar(p.p);
+	     	paquetesDeProximaCompu.diccPaqCamino->Definir(p.p, p.it);
     }
     it2.Avanzar();
   }
-
 }
 
-const Red& DcNet::ObtenerRed() const{
+Red& DcNet::ObtenerRed() const{//La red que se devuelve es const
   return *red;
 }
-
 
 const Lista<Compu>& DcNet::CaminoRecorrido(const PaqueteN& paq) const{
  /* dicc_trie esta mal hecho entonces no puede iterar diccionarios vacios */
@@ -205,8 +204,7 @@ const Lista<Compu>& DcNet::CaminoRecorrido(const PaqueteN& paq) const{
   return d->Obtener(paq).Siguiente();
 }
 
-
-Nat DcNet::CantidadEnviados(Compu& c){
+Nat DcNet::CantidadEnviados(const Compu& c){
   // no toma parametro const porque dicc_trie se rompe
   InfoPaquetes * info =  paquetes.obtener(c);
   return info->cantidadEnviados;
