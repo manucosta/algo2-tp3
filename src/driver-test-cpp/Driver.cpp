@@ -10,55 +10,71 @@ orden comp_nat(const Nat a, const Nat b){
 }
 
 Driver::Driver() {
-    Red red;
-    dcnet = new DcNet(&red);
+    red = new Red;
+    dcnet = NULL;
     proxPaq = 0;
     paq2paqN = new DiccLog<Paquete, PaqueteN>(comp_nat);
 }
 
 Driver::~Driver() {
-    delete dcnet;
+    if(red != NULL) delete red;
+    red = NULL;
+    if(dcnet != NULL) delete dcnet;
     dcnet = NULL;
+    if(paq2paqN != NULL) delete paq2paqN;
+    paq2paqN = NULL;
 }
 
 // TAD RED
 Nat Driver::CantidadComputadoras() const {
-    return dcnet->ObtenerRed().Computadoras().Cardinal();
+    return red->Computadoras().Cardinal();
 }
 
-const Computadora& Driver::IesimaComputadora(const Nat i) const {//No entiendo la semántica
-    // TODO
-	return 0;
+const Computadora& Driver::IesimaComputadora(const Nat i) const {//Indexo desde 0
+    Conj<Computadora> compus = red->Computadoras();
+    Conj<Computadora>::Iterador it = compus.CrearIt();
+    for(Nat j = 0; j < i && it.HaySiguiente(); j++){
+        it.Avanzar();
+    }
+	return it.Siguiente();
 }
         
 Nat Driver::CantidadInterfacesDe(const Computadora& c) const {
-    return dcnet->ObtenerRed().Interfaces(c).Cardinal();
+    return red->Interfaces(c).Cardinal();
 }
 
-const Interfaz& Driver::IesimaInterfazDe(const Computadora& c, const Nat i) const{//No entiendo la semántica
-    // TODO
-    return 0;
+const Interfaz& Driver::IesimaInterfazDe(const Computadora& c, const Nat i) const{//Indexo desde 0
+    Conj<Interfaz> interfaces = dcnet->ObtenerRed().Interfaces(c);
+    Conj<Interfaz>::Iterador it = interfaces.CrearIt();
+    for(Nat j = 0; j < i && it.HaySiguiente(); j++){
+        it.Avanzar();
+    }
+    return it.Siguiente();
 } 
 
 const Interfaz& Driver::IntefazUsada(const Computadora& c1, const Computadora& c2) const {
-    return dcnet->ObtenerRed().InterfazUsada(c1, c2);
+    return red->InterfazUsada(c1, c2);
 }
 
 
 bool Driver::conectadas(const Computadora& c1, const Computadora& c2) const {
-    return dcnet->ObtenerRed().Conectadas(c1, c2);
+    return red->Conectadas(c1, c2);
 }
 
-// TAD DCNET
+//ARMADO DE RED
 void Driver::AgregarComputadora(const Computadora& ip, const Conj<Interfaz>& ci) {
-    dcnet->ObtenerRed().AgregarComputadora(ip, ci);
+    red->AgregarComputadora(ip, ci);
+    if(dcnet != NULL) delete dcnet;
+    dcnet = new DcNet(red);
 }
         
 void Driver::Conectar(const Computadora& c1, const Interfaz& i1, const Computadora& c2, const Interfaz& i2) {
-    dcnet->ObtenerRed().Conectar(c1, c2, i1, i2);
+    red->Conectar(c1, c2, i1, i2);
+    if(dcnet != NULL) delete dcnet;
+    dcnet = new DcNet(red);
 }
 	
-	
+// TAD DCNET	
 Nat Driver::CantidadNodosRecorridosPor(const Paquete& p) const {
     PaqueteN pn = paq2paqN->Obtener(p);
     Lista<Computadora> camino = dcnet->CaminoRecorrido(pn);

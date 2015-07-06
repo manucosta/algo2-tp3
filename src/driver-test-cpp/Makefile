@@ -8,7 +8,7 @@ CFLAGS=-g -Wall
 LDFLAGS=
 
 # Agrear acá los directorios a incluir en la compilación
-INCDIR=../
+INCDIR=../ 
 
 # Agregar acá los archivos .cpp a compilar
 SOURCES=test.cpp Driver.cpp ../dcnet.cpp ../red.cpp

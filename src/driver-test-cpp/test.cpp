@@ -102,9 +102,9 @@ void test_dcnet_ejemplo() {
 	Computadora c1 = "dc.uba.ar";
 	Computadora c2 = "uba.ar";
 	Computadora c3 = "dm.uba.ar";
-	
+
 	Driver dcnet;
-	
+
 	dcnet.AgregarComputadora(c1, conjIc1);
 	dcnet.AgregarComputadora(c2, conjIc2);
 	dcnet.AgregarComputadora(c3, conjIc3);
@@ -112,7 +112,7 @@ void test_dcnet_ejemplo() {
 	// ejemplo - Indexado en 0 
 	Interfaz i1 = dcnet.IesimaInterfazDe(c1, 0); 
 	Interfaz i2 = dcnet.IesimaInterfazDe(c2, 2);
-	
+
 	dcnet.Conectar(c1, i1, c2, i2);
 	dcnet.CrearPaquete(c1, c2, 3);
 	dcnet.AvanzarSegundo();	

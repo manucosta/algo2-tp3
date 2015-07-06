@@ -66,8 +66,9 @@ class Driver
      * con el cuál interactuar. Además, pueden declarar todas las        *
      * funciones auxiliares que les hagan falta.                         *
      *********************************************************************/
+        Red* red;
         DcNet* dcnet;
-        Paquete proxPaq;
+        Paquete proxPaq;//Me da el id del siguiente PaqueteN
         DiccLog<Paquete, PaqueteN>* paq2paqN;//Es medio bestia que los paquetes se acumulan y nunca se borran
 
 }; // class Driver
