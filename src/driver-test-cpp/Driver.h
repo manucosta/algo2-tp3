@@ -7,11 +7,7 @@
 
 namespace aed2 {
 
-orden comp_nat(const Nat a, const Nat b){
-    if(a<b) return LT;
-    else if(a==b) return EQ;
-    else return GT;
-}
+orden comp_nat(const Nat a, const Nat b);
 
 class Driver
 {

@@ -3,6 +3,12 @@
 
 namespace aed2 {
 
+orden comp_nat(const Nat a, const Nat b){
+    if(a<b) return LT;
+    else if(a==b) return EQ;
+    else return GT;
+}
+
 Driver::Driver() {
     Red red;
     dcnet = new DcNet(&red);
@@ -93,17 +99,17 @@ const Computadora& Driver::laQueMasEnvio() const {
 }
 
 const Computadora& Driver::origen(const Paquete& p) const {
-    PaqueteN pn = paq2paqN->Obtener(p);
+    const PaqueteN& pn = paq2paqN->Obtener(p);
     return pn.origen;
 } 
 
 const Computadora& Driver::destino(const Paquete& p) const { 
-    PaqueteN pn = paq2paqN->Obtener(p);
+    const PaqueteN& pn = paq2paqN->Obtener(p);
     return pn.destino;
 }
 
 Nat Driver::prioridad(const Paquete& p) const { 
-    PaqueteN pn = paq2paqN->Obtener(p);
+    const PaqueteN& pn = paq2paqN->Obtener(p);
     return pn.prioridad;
 }
 		

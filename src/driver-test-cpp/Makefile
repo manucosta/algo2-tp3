@@ -11,7 +11,7 @@ LDFLAGS=
 INCDIR=../
 
 # Agregar acá los archivos .cpp a compilar
-SOURCES=test.cpp Driver.cpp 
+SOURCES=test.cpp Driver.cpp ../dcnet.cpp ../red.cpp
 
 # Objetos que serán generados (no tocar)
 OBJECTS=$(SOURCES:.cpp=.o)

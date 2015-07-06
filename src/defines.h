@@ -3,22 +3,22 @@
 #include "aed2.h"
 
 typedef String Compu;
-typedef Nat Interfaz;
+typedef Nat InterfazN;
 typedef Nat Id;
-typedef Nat Prioridad;
+typedef Nat PrioridadN;
 
 
 struct PaqueteN{
   PaqueteN(){}
-  PaqueteN(Id i, Prioridad p, Compu o, Compu d) : id(i), prioridad(p), origen(o), destino(d) {}
+  PaqueteN(Id i, PrioridadN p, Compu o, Compu d) : id(i), prioridad(p), origen(o), destino(d) {}
   Id id;
-  Prioridad prioridad;
+  PrioridadN prioridad;
   Compu origen;
   Compu destino;
-};
 
-bool operator==(const PaqueteN p1, const PaqueteN p2){
-	return p1.id == p2.id;
-}
+  bool operator==(const PaqueteN otro){
+	return id == otro.id;
+  }
+};
 
 #endif
