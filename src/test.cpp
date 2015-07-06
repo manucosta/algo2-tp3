@@ -253,7 +253,7 @@ void conjavl2(){
 void red(){
 	Red r;
 	Compu com1 = "compu1", com2 = "compu2", com3 = "compu3";
-	Conj<Interfaz> c1, c2, c3;
+	Conj<InterfazN> c1, c2, c3;
 	c1.Agregar(1);
 	c2.Agregar(1);
 	r.AgregarComputadora(com1,c1);
@@ -293,7 +293,7 @@ void dcnet(){
   /***/
 	Red r;
 	Compu com1 = "compu1", com2 = "compu2", com3 = "compu3";
-	Conj<Interfaz> c1, c2, c3;
+	Conj<InterfazN> c1, c2, c3;
 	c1.Agregar(1);
 	c2.Agregar(1);
 	c3.Agregar(1);
