@@ -115,7 +115,10 @@ void test_dcnet_ejemplo() {
 
 	dcnet.Conectar(c1, i1, c2, i2);
 	dcnet.CrearPaquete(c1, c2, 3);
-	dcnet.AvanzarSegundo();	
+
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c1, 0)), 3);
+
+	dcnet.AvanzarSegundo();
 
 	ASSERT_EQ(dcnet.laQueMasEnvio(), c1);
 		

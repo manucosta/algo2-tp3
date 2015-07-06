@@ -13,18 +13,19 @@ public:
   void Agregar(const T x);
   bool Pertenece(const T x);
   void Eliminar(const T x);
-  Nat Cardinal() const;
 
   ConjLog(orden(*compar)(const T, const T));
   ConjLog(){c = NULL;}
   
   ~ConjLog();
 
+  //Para el driver
+  Nat Cardinal() const;
+  Lista<T> Enlistar() const;
+
 private:
   DiccLog<T, Nat> * c;
 };
-
-
 
 template <typename T>
 ConjLog<T>::ConjLog(orden(*compar)(const T, const T)){
@@ -55,6 +56,11 @@ void ConjLog<T>::Eliminar(const T x){
 template <typename T>
 Nat ConjLog<T>::Cardinal() const {
   return c->CantidadClaves();
+}
+
+template <typename T>
+Lista<T> ConjLog<T>::Enlistar() const{
+  return c->Preorder();
 }
 
 

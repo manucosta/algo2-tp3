@@ -13,13 +13,16 @@ public:
   bool Definido(const K clave);
   void Borrar(const K clave);
   S Obtener(const K clave);
-  Nat CantidadClaves() const;
   
   DiccLog(orden(*comp)(const K, const K));
   DiccLog(){raiz = NULL; raiz2 = NULL; compar = NULL;}
   
   ~DiccLog();
 
+  //Para el driver:
+  Lista<K> Preorder() const;
+  Nat CantidadClaves() const;
+  
 private:
 	struct Nodo {
     Nodo(){}
@@ -49,6 +52,7 @@ private:
   void _Borrar(Nodo** d, K k);
   S _Obtener(Nodo** d, K k);
 
+  Lista<K> _Preorder(Nodo** a) const;
 
   Nodo borrarMin(Nodo** d){
     if((*d)->izq != NULL){
@@ -68,6 +72,7 @@ private:
   }
 
   Nat alturaNodo(Nodo * n){return n? n->altura : 0;}
+
 };
 
 
@@ -268,7 +273,30 @@ Nat DiccLog<K, S>::CantidadClaves() const {
   return tam;
 }
 
+template<typename K, typename S>
+Lista<K> DiccLog<K, S>::_Preorder(Nodo** a) const{
+  Lista<K> l;
+  if(*a != NULL){
+    l.AgregarAtras((*a)->clave);
+    Lista<K> l1 = _Preorder(&((*a)->izq));
+    typename Lista<K>::Iterador it = l1.CrearIt();
+    while(it.HaySiguiente()) {
+        l.AgregarAtras(it.Siguiente());
+        it.Avanzar();
+    }
+    Lista<K> l2 = _Preorder(&((*a)->der));
+    it = l2.CrearIt();
+    while(it.HaySiguiente()) {
+        l.AgregarAtras(it.Siguiente());
+        it.Avanzar();
+    }
+  } 
+  return l;
+}
 
-
+template<class K, class S>
+Lista<K> DiccLog<K, S>::Preorder() const{
+  return _Preorder(raiz);
+}
 
 #endif

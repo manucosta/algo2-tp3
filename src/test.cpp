@@ -137,6 +137,13 @@ void diccavl1(){
   ASSERT_EQ(dicc.Definido(4), true);
 
   ASSERT_EQ(dicc.Obtener(4), 4);
+
+  Lista<int> l = dicc.Preorder();
+  cout<< l<< endl;
+
+  dicc.Borrar(3);
+  l = dicc.Preorder();
+  cout<< l<< endl;
 }
 
 void diccavl2(){
@@ -212,6 +219,8 @@ void conjavl1(){
       ASSERT_EQ(conj.Pertenece(i*i) || conj.Pertenece(-i*i), true);
     }
   } 
+
+  //cout << conj.Enlistar()<< endl;
 }
 
 void conjavl2(){

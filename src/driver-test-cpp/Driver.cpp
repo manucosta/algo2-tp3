@@ -95,8 +95,9 @@ Nat Driver::CantidadEnEsperaEn(const Computadora& c) const {
     return dcnet->EnEspera(c).Cardinal();
 }
 
-const Paquete& Driver::IesimoEnEsperaEn(const Computadora& c, const Nat i) const {//No entiendo la semántica 
-    return 0;                                                                     //(estimo que puede ser por la prioridad)
+const Paquete& Driver::IesimoEnEsperaEn(const Computadora& c, const Nat i) const { 
+    Lista<PaqueteN> lp = dcnet->EnEspera(c).Enlistar();
+    return lp[i].id;                                                                    
 }
 
 void Driver::CrearPaquete(const Computadora& origen, const Computadora& destino, Nat prioridad) {
