@@ -16,7 +16,7 @@ public:
   void Conectar(Compu c1, Compu c2, InterfazN i1, InterfazN i2);
   bool Conectadas(const Compu c1, const Compu c2);
   Conj<Compu> Computadoras();
-  InterfazN InterfazUsada(const Compu c1, const Compu c2);
+  const InterfazN& InterfazUsada(const Compu c1, const Compu c2);
   Conj<Compu> Vecinos(Compu c);
   bool UsaInterfaz(Compu c, InterfazN i);
   Conj<Lista<Compu> > CaminosMinimos(Compu c1, Compu c2);

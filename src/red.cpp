@@ -39,7 +39,7 @@ Conj<Compu> Red::Computadoras(){
 }
 
 
-InterfazN Red::InterfazUsada(const Compu c1, const Compu c2){
+const InterfazN& Red::InterfazUsada(const Compu c1, const Compu c2){
   DiccString<InterfazN> * x = vecinos.obtener(c1);
   return *(x->obtener(c2));
 }
