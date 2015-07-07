@@ -120,22 +120,119 @@ void test_dcnet_ejemplo() {
 
 	dcnet.AvanzarSegundo();
 
-	ASSERT_EQ(dcnet.laQueMasEnvio(), c1);
-		
+	ASSERT_EQ(dcnet.laQueMasEnvio(), c1);		
 }
+
+
+void test_dcnet_nuestro_1() {
+	Conj<Interfaz> conjIc1;
+	Conj<Interfaz> conjIc2;
+	Conj<Interfaz> conjIc3;
+	Conj<Interfaz> conjIc4;
+	
+	conjIc1.Agregar(1);
+	conjIc1.Agregar(2);
+	
+	conjIc2.Agregar(1);
+	conjIc2.Agregar(2);
+	
+	conjIc3.Agregar(1);
+	conjIc3.Agregar(2);
+
+
+	conjIc4.Agregar(1);
+	conjIc4.Agregar(2);
+
+	
+	Computadora c1 = "dc.uba.ar";
+	Computadora c2 = "uba.ar";
+	Computadora c3 = "dm.uba.ar";
+	Computadora c4 = "df.uba.ar";
+
+	Driver dcnet;
+
+	dcnet.AgregarComputadora(c1, conjIc1);
+	dcnet.AgregarComputadora(c2, conjIc2);
+	dcnet.AgregarComputadora(c3, conjIc3);
+	dcnet.AgregarComputadora(c4, conjIc4);
+	
+	// ejemplo - Indexado en 0 
+	dcnet.Conectar(c1, dcnet.IesimaInterfazDe(c1, 0), c2, dcnet.IesimaInterfazDe(c2, 0));
+	dcnet.Conectar(c2, dcnet.IesimaInterfazDe(c2, 1), c3, dcnet.IesimaInterfazDe(c3, 0));
+	dcnet.Conectar(c3, dcnet.IesimaInterfazDe(c3, 1), c4, dcnet.IesimaInterfazDe(c4, 0));
+
+	dcnet.CrearPaquete(c1, c4, 3);
+
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c1, 0)), 3);	
+  dcnet.AvanzarSegundo();
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c2, 0)), 3);	
+  dcnet.AvanzarSegundo();
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c3, 0)), 3);	
+  dcnet.AvanzarSegundo();
+}
+
+
+void test_dcnet_nuestro_2() {
+	Conj<Interfaz> conjIc1;
+	Conj<Interfaz> conjIc2;
+	Conj<Interfaz> conjIc3;
+	Conj<Interfaz> conjIc4;
+	
+	conjIc1.Agregar(1);
+	conjIc1.Agregar(2);
+	
+	conjIc2.Agregar(1);
+	conjIc2.Agregar(2);
+	
+	conjIc3.Agregar(1);
+	conjIc3.Agregar(2);
+
+
+	conjIc4.Agregar(1);
+	conjIc4.Agregar(2);
+
+	
+	Computadora c1 = "dc.uba.ar";
+	Computadora c2 = "uba.ar";
+	Computadora c3 = "dm.uba.ar";
+	Computadora c4 = "df.uba.ar";
+
+	Driver dcnet;
+
+	dcnet.AgregarComputadora(c1, conjIc1);
+	dcnet.AgregarComputadora(c2, conjIc2);
+	dcnet.AgregarComputadora(c3, conjIc3);
+	dcnet.AgregarComputadora(c4, conjIc4);
+	
+	// ejemplo - Indexado en 0 
+	dcnet.Conectar(c1, dcnet.IesimaInterfazDe(c1, 0), c2, dcnet.IesimaInterfazDe(c2, 0));
+	dcnet.Conectar(c2, dcnet.IesimaInterfazDe(c2, 1), c3, dcnet.IesimaInterfazDe(c3, 0));
+	dcnet.Conectar(c3, dcnet.IesimaInterfazDe(c3, 1), c4, dcnet.IesimaInterfazDe(c4, 0));
+
+	dcnet.CrearPaquete(c1, c4, 1);
+	dcnet.CrearPaquete(c1, c4, 5);
+
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c1, 0)), 1);	
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c1, 1)), 5);	
+  dcnet.AvanzarSegundo();
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c2, 0)), 1);	
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c1, 0)), 5);	
+  dcnet.AvanzarSegundo();
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c3, 0)), 1);	
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c2, 0)), 5);	
+  dcnet.AvanzarSegundo();
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c4, 0)), 1);	
+	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c3, 0)), 5);	
+}
+
 
 
 int main(int argc, char **argv)
 {
     RUN_TEST(test_dcnet_ejemplo);
-	
-	/******************************************************************
-	 * TODO: escribir casos de test exhaustivos para todas            *
-	 * las funcionalidades del módulo.                                *
-     * La interacción con el TAD DcNet se debe hacer exclusivamente  *
-	 * a través de la interfaz del driver.                            *
-	 ******************************************************************/
-  
+    RUN_TEST(test_dcnet_nuestro_1);
+    RUN_TEST(test_dcnet_nuestro_2);
+	 
   // valgrind --leak-check=full --show-leak-kinds=all ./test
  
   

@@ -44,7 +44,7 @@ class Driver
         Nat CantidadEnviadosPor(const Computadora& c) const;
     
         Nat CantidadEnEsperaEn(const Computadora& c) const;
-        const Paquete& IesimoEnEsperaEn(const Computadora& c, const Nat i) const;
+        Paquete IesimoEnEsperaEn(const Computadora& c, const Nat i) const;
 
         /// Acciones DCNet ////////////////////////////////////////////////////////////
 

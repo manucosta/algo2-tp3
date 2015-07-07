@@ -95,9 +95,19 @@ Nat Driver::CantidadEnEsperaEn(const Computadora& c) const {
     return dcnet->EnEspera(c).Cardinal();
 }
 
-const Paquete& Driver::IesimoEnEsperaEn(const Computadora& c, const Nat i) const { 
+Paquete Driver::IesimoEnEsperaEn(const Computadora& c, const Nat i) const { 
     Lista<PaqueteN> lp = dcnet->EnEspera(c).Enlistar();
-    return lp[i].id;                                                                    
+    
+    Lista<PaqueteN>::Iterador it = lp.CrearIt();
+    
+    Nat j = i;
+
+    while(it.HaySiguiente()){
+      if(j == 0) return it.Siguiente().id;
+      else j--;
+      it.Avanzar();
+    }
+    
 }
 
 void Driver::CrearPaquete(const Computadora& origen, const Computadora& destino, Nat prioridad) {
