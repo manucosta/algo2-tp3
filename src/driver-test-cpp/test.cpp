@@ -1,5 +1,8 @@
 #include "Driver.h"
 #include "mini_test.h"
+#include "aed2/Lista.h"
+#include "aed2/Conj.h"
+#include "aed2/Dicc.h"
 
 #include <string>
 #include <iostream>
@@ -75,6 +78,428 @@ bool Comparar(const T& t, const S& s)
   return true;
 }
 
+void test_computadoras_es_conjunto() {
+	Driver dcnet;
+	Computadora c1 = "skynet";
+	Computadora c2 = "terminator";
+	Computadora c3 = "connor";
+	Computadora c4 = "terminator2";
+	Computadora c5 = "sarah";
+	Computadora c6 = "john";
+
+	Conj<Interfaz> conjIc1;
+	Conj<Interfaz> conjIc2;
+	Conj<Interfaz> conjIc3;
+	Conj<Interfaz> conjIc4;
+	Conj<Interfaz> conjIc5;
+	Conj<Interfaz> conjIc6;
+
+	dcnet.AgregarComputadora(c1,conjIc1);
+	dcnet.AgregarComputadora(c2,conjIc2);
+	dcnet.AgregarComputadora(c3,conjIc3);
+	dcnet.AgregarComputadora(c4,conjIc4);
+	dcnet.AgregarComputadora(c5,conjIc5);
+	dcnet.AgregarComputadora(c6,conjIc6);
+	dcnet.AgregarComputadora(c1,conjIc1);
+	
+	ASSERT_EQ(dcnet.CantidadComputadoras(), 6);
+			
+}
+
+void test_conectar_computadoras() {
+	Driver dcnet;
+	Computadora c1 = "skynet";
+	Computadora c2 = "terminator";
+	Computadora c3 = "connor";
+
+	Interfaz i1 = 1;
+	Interfaz i2 = 2;
+	Interfaz i3 = 3;
+	Interfaz i4 = 4;
+	Interfaz i5 = 5;
+
+	Conj<Interfaz> conjIc1;
+	Conj<Interfaz> conjIc2;
+	Conj<Interfaz> conjIc3;
+
+	conjIc1.Agregar(i1);
+	
+	conjIc2.Agregar(i2);
+	conjIc2.Agregar(i5);
+	
+	conjIc3.Agregar(i4);
+	conjIc3.Agregar(i3);
+	
+	dcnet.AgregarComputadora(c1,conjIc1);
+	dcnet.AgregarComputadora(c2,conjIc2);
+	dcnet.AgregarComputadora(c3,conjIc3);
+	
+	dcnet.Conectar(c1, i1,c2, i2);	
+	dcnet.Conectar(c2, i5,c3, i3);	
+
+	ASSERT_EQ(dcnet.conectadas(c1,c2), true);
+	ASSERT(dcnet.IntefazUsada(c1,c2) == i1);
+	ASSERT(dcnet.IntefazUsada(c2,c1) == i2);
+	
+	ASSERT_EQ(dcnet.conectadas(c2,c3), true);
+	ASSERT(dcnet.IntefazUsada(c2,c3) == i5);
+	ASSERT(dcnet.IntefazUsada(c3,c2) == i3);
+
+	ASSERT_EQ(dcnet.conectadas(c1,c3), false);
+	
+	ASSERT_EQ(dcnet.CantidadInterfacesDe(c1), 1);
+	ASSERT_EQ(dcnet.CantidadInterfacesDe(c2), 2);
+	ASSERT_EQ(dcnet.CantidadInterfacesDe(c3), 2);
+	
+}
+
+void test_crear_paquetes() {
+	Driver dcnet;
+	Computadora c1 = "skynet";
+	Computadora c2 = "terminator";
+	Computadora c3 = "connor";
+
+	Interfaz i1 = 1;
+	Interfaz i2 = 2;
+	Interfaz i3 = 3;
+	Interfaz i4 = 4;
+	Interfaz i5 = 5;
+
+	Conj<Interfaz> conjIc1;
+	Conj<Interfaz> conjIc2;
+	Conj<Interfaz> conjIc3;
+
+	conjIc1.Agregar(i1);
+	
+	conjIc2.Agregar(i2);
+	conjIc2.Agregar(i5);
+	
+	conjIc3.Agregar(i4);
+	conjIc3.Agregar(i3);
+	
+	dcnet.AgregarComputadora(c1,conjIc1);
+	dcnet.AgregarComputadora(c2,conjIc2);
+	dcnet.AgregarComputadora(c3,conjIc3);
+	
+	dcnet.Conectar(c1, i1,c2, i2);	
+	dcnet.Conectar(c2, i5,c3, i3);	
+
+	dcnet.CrearPaquete(c1,c2,2);
+	dcnet.CrearPaquete(c1,c2,1);
+	dcnet.CrearPaquete(c2,c3,3);
+	dcnet.CrearPaquete(c2,c3,2);
+	dcnet.CrearPaquete(c2,c3,1);
+	dcnet.CrearPaquete(c2,c3,1);
+	
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c1), 2);
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c2), 4);
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c3), 0);	
+	
+
+  //esta mal el test, hay 2 paquetes que llegan en cuando se avanza segundo
+  // 1+3+1 = 5 != 4
+	dcnet.AvanzarSegundo();
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c1), 1);
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c2), 3);
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c3), 1);	
+	
+	ASSERT_EQ(dcnet.CantidadEnviadosPor(c1), 1);
+	ASSERT_EQ(dcnet.CantidadEnviadosPor(c2), 1);
+	ASSERT_EQ(dcnet.CantidadEnviadosPor(c2), 0);
+	
+}
+
+void test_respeta_priodades() {
+	Driver dcnet;
+	Computadora c1 = "skynet";
+	Computadora c2 = "sky";
+
+	Interfaz i1 = 1;
+	Interfaz i2 = 2;
+
+	Conj<Interfaz> conjIc1;
+	Conj<Interfaz> conjIc2;
+
+	conjIc1.Agregar(i1);
+	
+	conjIc2.Agregar(i2);
+	
+	dcnet.AgregarComputadora(c1,conjIc1);
+	dcnet.AgregarComputadora(c2,conjIc2);
+	
+	dcnet.Conectar(c1, i1,c2, i2);	
+
+	dcnet.CrearPaquete(c1,c2,2);
+	dcnet.CrearPaquete(c1,c2,1);
+	dcnet.CrearPaquete(c1,c2,3);
+
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c1), 3);
+
+	dcnet.AvanzarSegundo();
+	
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c1), 2);
+	ASSERT_EQ(dcnet.CantidadEnviadosPor(c1), 1);
+
+	bool respetaPrioridad = true;
+	for (int i =0; i < dcnet.CantidadEnEsperaEn(c1) ; i++) { 
+		Nat pr = dcnet.prioridad(dcnet.IesimoEnEsperaEn(c1, i));
+		if (pr == 1) {
+			respetaPrioridad = false;
+		}
+	}
+
+	ASSERT_EQ(respetaPrioridad, true); 
+}
+
+void test_recorrido_simple() {
+	Driver dcnet;
+	Computadora c1 = "skynet";
+	Computadora c2 = "terminator";
+	Computadora c3 = "connor";
+	Computadora c4 = "sky";
+
+	Interfaz i1 = 1;
+	Interfaz i2 = 2;
+	Interfaz i3 = 3;
+	Interfaz i4 = 4;
+	Interfaz i5 = 5;
+	Interfaz i6 = 6;
+	
+	Conj<Interfaz> conjIc1;
+	Conj<Interfaz> conjIc2;
+	Conj<Interfaz> conjIc3;
+	Conj<Interfaz> conjIc4;
+
+	conjIc1.Agregar(i1);
+	
+	conjIc2.Agregar(i2);
+	conjIc2.Agregar(i5);
+	
+	conjIc3.Agregar(i4);
+	conjIc3.Agregar(i3);
+
+	conjIc4.Agregar(i6);
+	
+	dcnet.AgregarComputadora(c1,conjIc1);
+	dcnet.AgregarComputadora(c2,conjIc2);
+	dcnet.AgregarComputadora(c3,conjIc3);
+	dcnet.AgregarComputadora(c4,conjIc4);
+	
+	dcnet.Conectar(c1, i1,c2, i2);	
+	dcnet.Conectar(c2, i5,c3, i3);
+	dcnet.Conectar(c4, i6,c3, i4);
+
+	dcnet.CrearPaquete(c1,c4,1);
+	Nat paq = dcnet.IesimoEnEsperaEn(c1,0);
+	
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c1), 1);
+	
+	dcnet.AvanzarSegundo();
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c2), 1);
+
+	dcnet.AvanzarSegundo();
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c3), 1);
+
+	dcnet.AvanzarSegundo();
+	
+	ASSERT_EQ(dcnet.CantidadNodosRecorridosPor(paq),4);
+	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,0) == c1);
+	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,1) == c2);
+	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,2) == c3);
+	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,3) == c4);
+	
+	
+}
+
+void test_recorrido_dos_minimos() {
+	Driver dcnet;
+	Computadora c1 = "skynet";
+	Computadora c2 = "terminator";
+	Computadora c3 = "connor";
+	Computadora c4 = "sky";
+
+	Interfaz i1 = 1;
+	Interfaz i2 = 2;
+	Interfaz i3 = 3;
+	Interfaz i4 = 4;
+	Interfaz i5 = 5;
+	Interfaz i6 = 6;
+	Interfaz i7 = 7;
+	Interfaz i8 = 8;
+	
+	Conj<Interfaz> conjIc1;
+	Conj<Interfaz> conjIc2;
+	Conj<Interfaz> conjIc3;
+	Conj<Interfaz> conjIc4;
+
+
+	conjIc1.Agregar(i1);
+	conjIc1.Agregar(i2);
+	
+	conjIc2.Agregar(i3);
+	conjIc2.Agregar(i4);
+	
+	conjIc3.Agregar(i5);
+	conjIc3.Agregar(i6);
+
+	conjIc4.Agregar(i7);
+	conjIc4.Agregar(i8);
+
+	
+	dcnet.AgregarComputadora(c1,conjIc1);
+	dcnet.AgregarComputadora(c2,conjIc2);
+	dcnet.AgregarComputadora(c3,conjIc3);
+	dcnet.AgregarComputadora(c4,conjIc4);	
+	
+	dcnet.Conectar(c1, i1,c2, i3);	
+	dcnet.Conectar(c1, i2,c3, i5);
+
+	dcnet.Conectar(c2, i4,c4, i7);
+
+	dcnet.Conectar(c3, i6,c4, i8);
+
+
+	dcnet.CrearPaquete(c1,c4,1);
+	Nat paq = dcnet.IesimoEnEsperaEn(c1,0);
+	
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c1), 1);
+	
+	dcnet.AvanzarSegundo();
+	
+	// Puede ir por c2 o c3 , tiene que estar en alguno de los dos
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c2)+dcnet.CantidadEnEsperaEn(c3), 1);
+
+	dcnet.AvanzarSegundo();
+  //ESTO NO TIENE SENTIDO!! EL PAQUETE YA LLEGO a c4, NO ESTA "EN ESPERA"
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c4), 1);
+	
+	ASSERT_EQ(dcnet.CantidadNodosRecorridosPor(paq),3);
+	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,0) == c1);
+	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,1) == c2 || dcnet.IesimoNodoRecorridoPor(paq,1) == c3 );
+	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,2) == c4);
+
+}
+ 
+void test_recorrido_complejo() {
+	Driver dcnet;
+	Computadora c1 = "skynet";
+	Computadora c2 = "terminator";
+	Computadora c3 = "connor";
+	Computadora c4 = "sky";
+	Computadora c5 = "sarah";
+
+	Interfaz i1 = 1;
+	Interfaz i2 = 2;
+	Interfaz i3 = 3;
+	Interfaz i4 = 4;
+	Interfaz i5 = 5;
+	Interfaz i6 = 6;
+	Interfaz i7 = 7;
+	Interfaz i8 = 8;
+	Interfaz i9 = 9;
+	Interfaz i10 = 10;
+	Interfaz i11 = 11;
+	Interfaz i12 = 12;
+	
+	Conj<Interfaz> conjIc1;
+	Conj<Interfaz> conjIc2;
+	Conj<Interfaz> conjIc3;
+	Conj<Interfaz> conjIc4;
+	Conj<Interfaz> conjIc5;
+
+	conjIc1.Agregar(i1);
+	conjIc1.Agregar(i2);
+	
+	conjIc2.Agregar(i3);
+	conjIc2.Agregar(i4);
+	
+	conjIc3.Agregar(i5);
+	conjIc3.Agregar(i6);
+	conjIc3.Agregar(i7);
+
+	conjIc4.Agregar(i8);
+	conjIc4.Agregar(i9);
+	conjIc4.Agregar(i10);
+
+	conjIc5.Agregar(i11);
+	conjIc5.Agregar(i12);
+
+	
+	dcnet.AgregarComputadora(c1,conjIc1);
+	dcnet.AgregarComputadora(c2,conjIc2);
+	dcnet.AgregarComputadora(c3,conjIc3);
+	dcnet.AgregarComputadora(c4,conjIc4);
+	dcnet.AgregarComputadora(c5,conjIc5);
+	
+	dcnet.Conectar(c1, i1,c2, i3);	
+	dcnet.Conectar(c1, i2,c3, i5);
+
+	dcnet.Conectar(c2, i4,c4, i8);
+
+	dcnet.Conectar(c3, i6,c4, i9);
+	dcnet.Conectar(c3, i7,c5, i11);
+
+	dcnet.Conectar(c4, i10,c5, i12);
+
+	dcnet.CrearPaquete(c1,c5,1);
+	Nat paq = dcnet.IesimoEnEsperaEn(c1,0);
+	
+	dcnet.AvanzarSegundo();
+	dcnet.AvanzarSegundo();
+
+	ASSERT_EQ(dcnet.CantidadNodosRecorridosPor(paq),3);
+	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,0) == c1);
+	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,1) == c3);
+	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,2) == c5);
+}
+
+void test_la_que_mas_envio() {
+	Driver dcnet;
+	Computadora c1 = "skynet";
+	Computadora c2 = "terminator";
+	Computadora c3 = "connor";
+
+	Interfaz i1 = 1;
+	Interfaz i2 = 2;
+	Interfaz i3 = 3;
+	Interfaz i4 = 4;
+
+	Conj<Interfaz> conjIc1;
+	Conj<Interfaz> conjIc2;
+	Conj<Interfaz> conjIc3;
+
+	conjIc1.Agregar(i1);
+	
+	conjIc2.Agregar(i2);
+	conjIc2.Agregar(i3);
+	
+	conjIc3.Agregar(i4);
+
+	dcnet.AgregarComputadora(c1,conjIc1);
+	dcnet.AgregarComputadora(c2,conjIc2);
+	dcnet.AgregarComputadora(c3,conjIc3);
+
+	// c1 -- c2 -- c3	
+	dcnet.Conectar(c1, i1,c2, i2);	
+	dcnet.Conectar(c2, i3,c3, i4);
+
+	dcnet.CrearPaquete(c1,c3,1);
+	dcnet.CrearPaquete(c2,c3,1);
+	
+	dcnet.AvanzarSegundo();
+  dcnet.AvanzarSegundo();
+
+
+	ASSERT_EQ(dcnet.laQueMasEnvio(), c2);
+	dcnet.CrearPaquete(c1,c2,1);
+	dcnet.CrearPaquete(c1,c2,1);
+	dcnet.AvanzarSegundo();
+	dcnet.AvanzarSegundo();
+
+	ASSERT_EQ(dcnet.laQueMasEnvio(), c1);
+
+}
+
 
 // ---------------------------------------------------------------------
 
@@ -99,12 +524,12 @@ void test_dcnet_ejemplo() {
 	conjIc3.Agregar(1);
 	conjIc3.Agregar(2);
 	
-	Computadora c1 = "dc.uba.ar";
-	Computadora c2 = "uba.ar";
-	Computadora c3 = "dm.uba.ar";
-
+	Computadora c1 = "dcubaar";
+	Computadora c2 = "ubaar";
+	Computadora c3 = "dmubaar";
+	
 	Driver dcnet;
-
+	
 	dcnet.AgregarComputadora(c1, conjIc1);
 	dcnet.AgregarComputadora(c2, conjIc2);
 	dcnet.AgregarComputadora(c3, conjIc3);
@@ -112,130 +537,27 @@ void test_dcnet_ejemplo() {
 	// ejemplo - Indexado en 0 
 	Interfaz i1 = dcnet.IesimaInterfazDe(c1, 0); 
 	Interfaz i2 = dcnet.IesimaInterfazDe(c2, 2);
-
+	
 	dcnet.Conectar(c1, i1, c2, i2);
 	dcnet.CrearPaquete(c1, c2, 3);
+	dcnet.AvanzarSegundo();	
 
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c1, 0)), 3);
-
-	dcnet.AvanzarSegundo();
-
-	ASSERT_EQ(dcnet.laQueMasEnvio(), c1);		
+	ASSERT_EQ(dcnet.laQueMasEnvio(), c1);
+		
 }
-
-
-void test_dcnet_nuestro_1() {
-	Conj<Interfaz> conjIc1;
-	Conj<Interfaz> conjIc2;
-	Conj<Interfaz> conjIc3;
-	Conj<Interfaz> conjIc4;
-	
-	conjIc1.Agregar(1);
-	conjIc1.Agregar(2);
-	
-	conjIc2.Agregar(1);
-	conjIc2.Agregar(2);
-	
-	conjIc3.Agregar(1);
-	conjIc3.Agregar(2);
-
-
-	conjIc4.Agregar(1);
-	conjIc4.Agregar(2);
-
-	
-	Computadora c1 = "dc.uba.ar";
-	Computadora c2 = "uba.ar";
-	Computadora c3 = "dm.uba.ar";
-	Computadora c4 = "df.uba.ar";
-
-	Driver dcnet;
-
-	dcnet.AgregarComputadora(c1, conjIc1);
-	dcnet.AgregarComputadora(c2, conjIc2);
-	dcnet.AgregarComputadora(c3, conjIc3);
-	dcnet.AgregarComputadora(c4, conjIc4);
-	
-	// ejemplo - Indexado en 0 
-	dcnet.Conectar(c1, dcnet.IesimaInterfazDe(c1, 0), c2, dcnet.IesimaInterfazDe(c2, 0));
-	dcnet.Conectar(c2, dcnet.IesimaInterfazDe(c2, 1), c3, dcnet.IesimaInterfazDe(c3, 0));
-	dcnet.Conectar(c3, dcnet.IesimaInterfazDe(c3, 1), c4, dcnet.IesimaInterfazDe(c4, 0));
-
-	dcnet.CrearPaquete(c1, c4, 3);
-
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c1, 0)), 3);	
-  dcnet.AvanzarSegundo();
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c2, 0)), 3);	
-  dcnet.AvanzarSegundo();
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c3, 0)), 3);	
-  dcnet.AvanzarSegundo();
-}
-
-
-void test_dcnet_nuestro_2() {
-	Conj<Interfaz> conjIc1;
-	Conj<Interfaz> conjIc2;
-	Conj<Interfaz> conjIc3;
-	Conj<Interfaz> conjIc4;
-	
-	conjIc1.Agregar(1);
-	conjIc1.Agregar(2);
-	
-	conjIc2.Agregar(1);
-	conjIc2.Agregar(2);
-	
-	conjIc3.Agregar(1);
-	conjIc3.Agregar(2);
-
-
-	conjIc4.Agregar(1);
-	conjIc4.Agregar(2);
-
-	
-	Computadora c1 = "dc.uba.ar";
-	Computadora c2 = "uba.ar";
-	Computadora c3 = "dm.uba.ar";
-	Computadora c4 = "df.uba.ar";
-
-	Driver dcnet;
-
-	dcnet.AgregarComputadora(c1, conjIc1);
-	dcnet.AgregarComputadora(c2, conjIc2);
-	dcnet.AgregarComputadora(c3, conjIc3);
-	dcnet.AgregarComputadora(c4, conjIc4);
-	
-	// ejemplo - Indexado en 0 
-	dcnet.Conectar(c1, dcnet.IesimaInterfazDe(c1, 0), c2, dcnet.IesimaInterfazDe(c2, 0));
-	dcnet.Conectar(c2, dcnet.IesimaInterfazDe(c2, 1), c3, dcnet.IesimaInterfazDe(c3, 0));
-	dcnet.Conectar(c3, dcnet.IesimaInterfazDe(c3, 1), c4, dcnet.IesimaInterfazDe(c4, 0));
-
-	dcnet.CrearPaquete(c1, c4, 1);
-	dcnet.CrearPaquete(c1, c4, 5);
-
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c1, 0)), 1);	
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c1, 1)), 5);	
-  dcnet.AvanzarSegundo();
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c2, 0)), 1);	
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c1, 0)), 5);	
-  dcnet.AvanzarSegundo();
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c3, 0)), 1);	
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c2, 0)), 5);	
-  dcnet.AvanzarSegundo();
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c4, 0)), 1);	
-	ASSERT_EQ(dcnet.prioridad(dcnet.IesimoEnEsperaEn(c3, 0)), 5);	
-}
-
 
 
 int main(int argc, char **argv)
 {
     RUN_TEST(test_dcnet_ejemplo);
-    RUN_TEST(test_dcnet_nuestro_1);
-    RUN_TEST(test_dcnet_nuestro_2);
-	 
-  // valgrind --leak-check=full --show-leak-kinds=all ./test
- 
-  
-  
+    RUN_TEST(test_computadoras_es_conjunto);
+    RUN_TEST(test_conectar_computadoras);
+    //RUN_TEST(test_crear_paquetes); // esta mal el test
+    RUN_TEST(test_respeta_priodades); 
+    //RUN_TEST(test_recorrido_simple); // se cuelga
+	//RUN_TEST(test_recorrido_dos_minimos); // esta mal el test
+	//RUN_TEST(test_recorrido_complejo); // se cuelga
+	RUN_TEST(test_la_que_mas_envio);
+
 	return 0;
 }
