@@ -35,7 +35,7 @@ private:
         	 diccPaqCamino(new DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador>(&ComparIdx)),
            conjPaquetes(new ConjLog<PaqueteN>(&ComparIdx)),
            cantidadEnviados(0)
-					 {}
+					 {
 		
     	ColaPrior<PaqueteN> * cola; //(orden ComparPrioridad(PaqueteN, PaqueteN));
 		DiccLog<PaqueteN, Lista<Lista<Compu> >::Iterador> * diccPaqCamino; //(orden ComparId(PaqueteN, PaqueteN));

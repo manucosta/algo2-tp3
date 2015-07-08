@@ -81,9 +81,9 @@ Nat Driver::CantidadNodosRecorridosPor(const Paquete& p) const {
     return camino.Longitud();
 }
 
-const Computadora& Driver::IesimoNodoRecorridoPor(const Paquete& p, const Nat i) const {
+Computadora Driver::IesimoNodoRecorridoPor(const Paquete& p, const Nat i) const {
     PaqueteN pn = paq2paqN->Obtener(p);
-    Lista<Computadora> camino = dcnet->CaminoRecorrido(pn);
+    Lista<Computadora> camino = dcnet->CaminoRecorrido(pn);	
     return camino[i];
 }
 

@@ -24,17 +24,19 @@ orden ComparPrioridadx(const PaqueteN p1, const PaqueteN p2){
 /****Implementación de operaciones de DcNet****/
 
 DcNet::~DcNet(){ 
-
-	DiccString<InfoPaquetes>::Iterador it(&paquetes);
-  do{
-    InfoPaquetes * info = it.valorActual();
+	std::vector<Compu> v = paquetes.claves();
+	for(int i = 0; i<v.size(); i++){
+		
+    InfoPaquetes * info = paquetes.obtener(v[i]);
     delete info->cola;
     info->cola = NULL;
     delete info->diccPaqCamino;
     info->diccPaqCamino = NULL;
     delete info->conjPaquetes;
     info->conjPaquetes = NULL;
-  }while(it.avanzar());
+		
+		
+	}	
 }
 
 DcNet::DcNet(Red * r){
@@ -49,7 +51,7 @@ DcNet::DcNet(Red * r){
   while(it.HaySiguiente()) {
       DiccString<Compu> diccActual;
       
-      InfoPaquetes tupInfoPaquetes; 
+      InfoPaquetes tupInfoPaquetes; 	
       paquetes.definir(it.Siguiente(), tupInfoPaquetes);
       
       
@@ -77,6 +79,8 @@ DcNet::DcNet(Red * r){
       proximaEnCamino.definir(it.Siguiente(), diccActual);  
       it.Avanzar();
   }
+
+
 }
 
 struct paquetesAEnv{

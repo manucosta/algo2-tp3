@@ -195,17 +195,14 @@ void test_crear_paquetes() {
 	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c2), 4);
 	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c3), 0);	
 	
-
-  //esta mal el test, hay 2 paquetes que llegan en cuando se avanza segundo
-  // 1+3+1 = 5 != 4
 	dcnet.AvanzarSegundo();
 	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c1), 1);
 	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c2), 3);
-	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c3), 1);	
+	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c3), 0);	
 	
 	ASSERT_EQ(dcnet.CantidadEnviadosPor(c1), 1);
 	ASSERT_EQ(dcnet.CantidadEnviadosPor(c2), 1);
-	ASSERT_EQ(dcnet.CantidadEnviadosPor(c2), 0);
+	ASSERT_EQ(dcnet.CantidadEnviadosPor(c3), 0);
 	
 }
 
@@ -248,7 +245,8 @@ void test_respeta_priodades() {
 		}
 	}
 
-	ASSERT_EQ(respetaPrioridad, true); 
+	ASSERT_EQ(respetaPrioridad, true);
+
 }
 
 void test_recorrido_simple() {
@@ -289,7 +287,6 @@ void test_recorrido_simple() {
 	dcnet.Conectar(c2, i5,c3, i3);
 	dcnet.Conectar(c4, i6,c3, i4);
 
-
 	dcnet.CrearPaquete(c1,c4,1);
 	Nat paq = dcnet.IesimoEnEsperaEn(c1,0);
 	
@@ -301,16 +298,11 @@ void test_recorrido_simple() {
 	dcnet.AvanzarSegundo();
 	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c3), 1);
 
-	dcnet.AvanzarSegundo();
 	
-  // el paquete ya llego a destino, no esta mas en la red!!
-	// estan mal   vvvvv    estos tests
-	ASSERT_EQ(dcnet.CantidadNodosRecorridosPor(paq),4);
-
+	ASSERT_EQ(dcnet.CantidadNodosRecorridosPor(paq),3);
 	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,0) == c1);
 	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,1) == c2);
 	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,2) == c3);
-	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,3) == c4);
 	
 	
 }
@@ -373,14 +365,10 @@ void test_recorrido_dos_minimos() {
 	// Puede ir por c2 o c3 , tiene que estar en alguno de los dos
 	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c2)+dcnet.CantidadEnEsperaEn(c3), 1);
 
-	dcnet.AvanzarSegundo();
-  //ESTO NO TIENE SENTIDO!! EL PAQUETE YA LLEGO a c4, NO ESTA "EN ESPERA"
-	ASSERT_EQ(dcnet.CantidadEnEsperaEn(c4), 1);
 	
-	ASSERT_EQ(dcnet.CantidadNodosRecorridosPor(paq),3);
+	ASSERT_EQ(dcnet.CantidadNodosRecorridosPor(paq),2);
 	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,0) == c1);
 	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,1) == c2 || dcnet.IesimoNodoRecorridoPor(paq,1) == c3 );
-	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,2) == c4);
 
 }
  
@@ -449,14 +437,10 @@ void test_recorrido_complejo() {
 	Nat paq = dcnet.IesimoEnEsperaEn(c1,0);
 	
 	dcnet.AvanzarSegundo();
-	dcnet.AvanzarSegundo();
 
-  // el paquete ya llego a destino, no esta mas en la red!!
-	// estan mal   vvvvv    estos tests
-	ASSERT_EQ(dcnet.CantidadNodosRecorridosPor(paq),3);
+	ASSERT_EQ(dcnet.CantidadNodosRecorridosPor(paq),2);
 	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,0) == c1);
 	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,1) == c3);
-	ASSERT(dcnet.IesimoNodoRecorridoPor(paq,2) == c5);
 }
 
 void test_la_que_mas_envio() {
@@ -493,8 +477,7 @@ void test_la_que_mas_envio() {
 	dcnet.CrearPaquete(c2,c3,1);
 	
 	dcnet.AvanzarSegundo();
-  dcnet.AvanzarSegundo();
-
+	dcnet.AvanzarSegundo();
 
 	ASSERT_EQ(dcnet.laQueMasEnvio(), c2);
 	dcnet.CrearPaquete(c1,c2,1);
@@ -556,13 +539,13 @@ void test_dcnet_ejemplo() {
 int main(int argc, char **argv)
 {
     RUN_TEST(test_dcnet_ejemplo);
-    //RUN_TEST(test_computadoras_es_conjunto);
+    RUN_TEST(test_computadoras_es_conjunto);
     RUN_TEST(test_conectar_computadoras);
-    //RUN_TEST(test_crear_paquetes); // esta mal el test
-    RUN_TEST(test_respeta_priodades); 
-    //RUN_TEST(test_recorrido_simple); // esta mal el test
-	//RUN_TEST(test_recorrido_dos_minimos); // esta mal el test
-	//RUN_TEST(test_recorrido_complejo); // esta mal el test
+    RUN_TEST(test_crear_paquetes);
+    RUN_TEST(test_respeta_priodades);
+    RUN_TEST(test_recorrido_simple);
+	RUN_TEST(test_recorrido_dos_minimos);
+	RUN_TEST(test_recorrido_complejo);
 	RUN_TEST(test_la_que_mas_envio);
 
 	return 0;
