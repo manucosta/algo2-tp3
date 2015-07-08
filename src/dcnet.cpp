@@ -97,12 +97,12 @@ void DcNet::CrearPaquete(PaqueteN paq){
 
     Lista<Lista<Compu> >::Iterador it = caminosRecorridos.AgregarAtras(nuevoCaminoRecorrido);
 
-    InfoPaquetes losPaquetes = *(paquetes.obtener(paq.origen));
+    InfoPaquetes * losPaquetes = paquetes.obtener(paq.origen);
 
 
-    losPaquetes.cola->Encolar(paq);
-    losPaquetes.conjPaquetes->Agregar(paq);
-    losPaquetes.diccPaqCamino->Definir(paq, it);
+    losPaquetes->cola->Encolar(paq);
+    losPaquetes->conjPaquetes->Agregar(paq);
+    losPaquetes->diccPaqCamino->Definir(paq, it);
   }
 }
 
@@ -113,18 +113,19 @@ void DcNet::AvanzarSegundo(){
 	DiccString<InfoPaquetes>::Iterador it(&paquetes);
 	//se rompe si dicc es vacio,deberiamos hacer el assert
 	do{
-		InfoPaquetes s = *(it.valorActual());	
-		if(!s.cola->Vacia()){
-			PaqueteN estePaquete = s.cola->Desencolar();
-      s.conjPaquetes->Eliminar(estePaquete);
+		InfoPaquetes * s = it.valorActual();	
+		if(!s->cola->Vacia()){
+			PaqueteN estePaquete = s->cola->Desencolar();
+      s->conjPaquetes->Eliminar(estePaquete);
       
-      struct paquetesAEnv x(estePaquete, s.diccPaqCamino->Obtener(estePaquete));
+      struct paquetesAEnv x(estePaquete, s->diccPaqCamino->Obtener(estePaquete));
       paquetesAEnviar.AgregarAtras(x);
 
-      s.diccPaqCamino->Borrar(estePaquete);
-      s.cantidadEnviados++;
-      if(s.cantidadEnviados > laQueMasEnvio.cuantosEnvio){
-        laQueMasEnvio.cuantosEnvio = s.cantidadEnviados;
+      s->diccPaqCamino->Borrar(estePaquete);
+      s->cantidadEnviados++; 
+
+      if(s->cantidadEnviados > laQueMasEnvio.cuantosEnvio){
+        laQueMasEnvio.cuantosEnvio = s->cantidadEnviados;
         laQueMasEnvio.cualCompu = x.it.Siguiente().Ultimo();
       }
 		}
@@ -133,15 +134,15 @@ void DcNet::AvanzarSegundo(){
 	Lista<struct paquetesAEnv>::Iterador it2 = paquetesAEnviar.CrearIt();
   	while(it2.HaySiguiente()){
 	    struct paquetesAEnv p = it2.Siguiente(); 
-	    DiccString<Compu> proximasCompus = *(proximaEnCamino.obtener(p.it.Siguiente().Ultimo()));
-	    Compu proximaCompu = *(proximasCompus.obtener(p.p.destino));
+	    DiccString<Compu> * proximasCompus = proximaEnCamino.obtener(p.it.Siguiente().Ultimo());
+	    Compu proximaCompu = *(proximasCompus->obtener(p.p.destino));
 
 	    if(proximaCompu != p.p.destino){ //esto estaba mal en el tp
-	        InfoPaquetes paquetesDeProximaCompu = *(paquetes.obtener(proximaCompu));
+	        InfoPaquetes * paquetesDeProximaCompu = paquetes.obtener(proximaCompu);
 		    p.it.Siguiente().AgregarAtras(proximaCompu);
-	    	paquetesDeProximaCompu.cola->Encolar(p.p);
-	    	paquetesDeProximaCompu.conjPaquetes->Agregar(p.p);
-	     	paquetesDeProximaCompu.diccPaqCamino->Definir(p.p, p.it);
+	    	paquetesDeProximaCompu->cola->Encolar(p.p);
+	    	paquetesDeProximaCompu->conjPaquetes->Agregar(p.p);
+	     	paquetesDeProximaCompu->diccPaqCamino->Definir(p.p, p.it);
     }
     it2.Avanzar();
   }
